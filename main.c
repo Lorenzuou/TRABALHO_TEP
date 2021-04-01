@@ -1,3 +1,4 @@
+//belo trabalho amigo//
 #include<stdio.h> 
 
 
