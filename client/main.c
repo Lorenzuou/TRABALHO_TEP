@@ -1,10 +1,21 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "../include/user.h"
+
+
+
+
+
+
+
+
+
 
 void criarMenu()
 {
     char entrada;
     scanf("%c", &entrada);
+    
     switch (entrada)
     {
     case '1':
@@ -14,7 +25,7 @@ void criarMenu()
         realizarCadastro();
         break;
     case '3':
-        procurarFilme();
+        // procurarFilme();
         break;
     case '4':
 
@@ -28,7 +39,6 @@ void criarMenu()
 int main()
 {
 
-    printf("Hello Henrick Bengolo");
 
 
     criarMenu(); 
