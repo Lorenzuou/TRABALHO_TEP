@@ -27,7 +27,7 @@ typedef struct
 /*
 * Carrega os usuários do arquivo usuarios.csv e armazena em um vetor de usuários  
 */
-void carregarUsuarios(); 
+Usuario* carregarUsuarios(); 
 
 
 

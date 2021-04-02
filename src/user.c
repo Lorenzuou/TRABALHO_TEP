@@ -1,33 +1,40 @@
 #include "user.h"
 
-void carregarUsuarios()
+Usuario* carregarUsuarios()
 {
 
     Usuario *user;
-    user = (Usuario*)malloc(sizeof(Usuario) * TAM);
+    user = (Usuario *)malloc(sizeof(Usuario) * TAM);
     int countUsuario = 0;
 
     FILE *file = fopen("data/usuarios.csv", "r");
 
     char linha[1024];
+
     while (fgets(linha, 1024, file))
     {
 
-         strcpy( user[countUsuario].nome,strtok(linha, ",") );
-         strcpy( user[countUsuario].nome,strtok(linha, ",") );
+        strcpy(user[countUsuario].nome, strtok(linha, ","));
+        strcpy(user[countUsuario].senha, strtok(NULL, ","));
 
-        // *user.nome =  strtok(linha, ",");
-        // user.senha = *strtok(NULL, ",");
-        printf("%s",user[countUsuario].nome);
-        printf("%s",user[countUsuario].senha);
+        printf("1:%s, ", user[countUsuario].nome);
+        printf("2:%s\n", user[countUsuario].senha);
 
-        fclose(file);
         countUsuario++;
     };
+
+    fclose(file);
+
+   
+    
+    return user;
 }
+
 void realizarLogin()
 {
-    carregarUsuarios();
+    Usuario *usuarios = carregarUsuarios();
+    
+    
     // char *usuarios;
 
     // char *nome[TAM];
@@ -41,4 +48,18 @@ void realizarLogin()
 
 void realizarCadastro()
 {
+    Usuario novoUsuario; 
+
+
+    printf("Digite seu nome de usuario: ");
+    scanf("%s",novoUsuario.nome); 
+    printf("\nDigite sua senha: ");
+    scanf("%s",novoUsuario.senha); 
+
+    FILE *file = fopen("data/usuarios.csv", "a");
+
+    fprintf(file,"\n%s,%s",novoUsuario.nome,novoUsuario.senha);
+
+    fclose(file);
+
 }
