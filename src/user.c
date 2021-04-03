@@ -22,6 +22,7 @@ Usuario *carregarUsuarios()
         // printf("2:%s\n", user[countUsuario].senha);
 
         qtdUsuarios++;
+        countUsuario++;
     };
 
     fclose(file);
@@ -42,19 +43,20 @@ void realizarLogin()
     printf("\nSenha: ");
     scanf("%s", senha);
 
-    printf("%s", usuarios[0].nome);
 
-    // for (int i = 0; i < qtdUsuarios; i++)
-    // {
+    for (int i = 0; i < qtdUsuarios; i++)
+    {
 
-    //     if (strcmp(nome, usuarios[i].nome))
-    //     {
-    //         if(strcmp(senha, usuarios[i].senha)){
-    //             printf("Usuário Logado com sucesso!");
+        if (!strcmp(nome, usuarios[i].nome))
+        {
+            printf("%s - %s\n", nome,usuarios[i].nome);
+             printf("%s - %s\n\n", senha,usuarios[i].senha);
+            if(!strcmp(senha, usuarios[i].senha)){
+                printf("Usuário Logado com sucesso!");
 
-    //         }
-    //     }
-    // }
+            }
+        }
+    }
 
     free(usuarios);
 }
