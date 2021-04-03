@@ -38,7 +38,7 @@ Usuario *carregarUsuarios( );
 
 int realizarLogin();
 
-void realizarCadastro();
+int realizarCadastro();
 
 void procurarFilme();
 
