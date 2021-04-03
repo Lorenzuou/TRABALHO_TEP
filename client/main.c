@@ -11,37 +11,39 @@
 
 
 
-void criarMenu()
-{
-    char entrada;
-    scanf("%c", &entrada);
+// void criarMenu()
+// {
+//     char entrada;
+//     scanf("%c", &entrada);
     
-    switch (entrada)
-    {
-    case '1':
-        realizarLogin();
-        break;
-    case '2':
-        realizarCadastro();
-        break;
-    case '3':
-        // procurarFilme();
-        break;
-    case '4':
+//     switch (entrada)
+//     {
+//     case '1':
+//         realizarLogin();
+//         break;
+//     case '2':
+//         realizarCadastro();
+//         break;
+//     case '3':
+//         // procurarFilme();
+//         break;
+//     case '4':
 
-        break;
+//         break;
 
-    default:
-        break;
-    }
-}
+//     default:
+//         break;
+//     }
+// }
 
 int main()
 {
 
 
+    while(!criarMenu()){ // Enquanto não houver um usuário logado, o menu será chamado 
 
-    criarMenu(); 
+    }
+     
 
     return 0;
 }

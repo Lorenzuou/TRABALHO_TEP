@@ -1,5 +1,41 @@
 #include "user.h"
 
+int criarMenu()
+{
+    char entrada;
+    printf("**LOCADORA VIRTUAL**\n\n1.Login\n2.Cadastro\n3.Sair\n");
+    scanf("%c", &entrada);
+
+    switch (entrada)
+    {
+    case '1':
+
+        if (realizarLogin())
+        {
+            return 1;
+        }
+        else
+        {
+            printf("uai\n");
+            return 0; 
+        }
+
+        break;
+    case '2':
+        realizarCadastro();
+        break;
+    case '3':
+        // procurarFilme();
+        break;
+    case '4':
+
+        break;
+
+    default:
+        break;
+    }
+}
+
 Usuario *carregarUsuarios()
 {
 
@@ -30,35 +66,49 @@ Usuario *carregarUsuarios()
     return user;
 }
 
-void realizarLogin()
+int realizarLogin()
 {
 
     Usuario *usuarios = carregarUsuarios();
 
     char nome[TAM];
     char senha[TAM];
+    system("clear");
 
     printf("Usuario: ");
     scanf("%s", nome);
     printf("\nSenha: ");
     scanf("%s", senha);
 
-
     for (int i = 0; i < qtdUsuarios; i++)
     {
-
-        if (!strcmp(nome, usuarios[i].nome))
+        usuarios[i].senha[strcspn(usuarios[i].senha, "\n")] = 0; // Toma como nulo a posição da string que ocorrer um "\n"
+        if (!strcmp(nome, usuarios[i].nome)) // verifica se há um usuario com o que foi digitado
         {
-            printf("%s - %s\n", nome,usuarios[i].nome);
-             printf("%s - %s\n\n", senha,usuarios[i].senha);
-            if(!strcmp(senha, usuarios[i].senha)){
-                printf("Usuário Logado com sucesso!");
+            // printf("%s - %s\n", nome, usuarios[i].nome);
+            // printf("%s - %s", senha, usuarios[i].senha);
 
+            if (!strcmp(senha, usuarios[i].senha)) // verifica se a senha do usuario confere.
+            {
+                system("clear");
+
+                free(usuarios);
+                return 1;
+            }
+            else
+            {
+                system("clear");
+                printf("\nUSenha incorreta. ");
             }
         }
+       
+       
     }
-
-    free(usuarios);
+        printf("\nUsuario nao cadastrado."); 
+     
+        free(usuarios);
+        return 0;
+    
 }
 
 void realizarCadastro()
