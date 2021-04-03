@@ -1,6 +1,6 @@
 #include "user.h"
 
-int criarMenu()
+int criarMenuLogin()
 {
     char entrada;
     printf("**LOCADORA VIRTUAL**\n\n1.Login\n2.Cadastro\n3.Sair\n");
@@ -10,22 +10,14 @@ int criarMenu()
     {
     case '1':
 
-        if (realizarLogin())
-        {
-            return 1;
-        }
-        else
-        {
-            printf("uai\n");
-            return 0; 
-        }
+        return realizarLogin();
 
         break;
     case '2':
         realizarCadastro();
         break;
     case '3':
-        // procurarFilme();
+        return 2; 
         break;
     case '4':
 
@@ -34,6 +26,9 @@ int criarMenu()
     default:
         break;
     }
+
+    // system("clear");
+    return 0;
 }
 
 Usuario *carregarUsuarios()
@@ -83,7 +78,7 @@ int realizarLogin()
     for (int i = 0; i < qtdUsuarios; i++)
     {
         usuarios[i].senha[strcspn(usuarios[i].senha, "\n")] = 0; // Toma como nulo a posição da string que ocorrer um "\n"
-        if (!strcmp(nome, usuarios[i].nome)) // verifica se há um usuario com o que foi digitado
+        if (!strcmp(nome, usuarios[i].nome))                     // verifica se há um usuario com o que foi digitado
         {
             // printf("%s - %s\n", nome, usuarios[i].nome);
             // printf("%s - %s", senha, usuarios[i].senha);
@@ -97,18 +92,18 @@ int realizarLogin()
             }
             else
             {
+
                 system("clear");
-                printf("\nUSenha incorreta. ");
+                printf("\nSenha incorreta. ");
+                free(usuarios);
+                return 0;
             }
         }
-       
-       
     }
-        printf("\nUsuario nao cadastrado."); 
-     
-        free(usuarios);
-        return 0;
-    
+    printf("\nUsuario nao cadastrado.");
+
+    free(usuarios);
+    return 0;
 }
 
 void realizarCadastro()

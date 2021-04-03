@@ -38,11 +38,15 @@
 
 int main()
 {
+    int verificar = 0; 
 
-
-    while(!criarMenu()){ // Enquanto não houver um usuário logado, o menu será chamado 
+    while(!verificar){ // Enquanto não houver um usuário logado, o menu será chamado    
+    verificar = criarMenuLogin(); 
+    }
+    if(verificar == 1){ // Verifica se o usuario está de fato logado
 
     }
+
      
 
     return 0;
