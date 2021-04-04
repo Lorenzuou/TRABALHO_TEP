@@ -3,26 +3,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include<ctype.h> 
 
 #define TAM 20
-
-typedef struct
-{
-    int id;
-    char nome[30];
-    char senha[30];
-    char data[10];
-} Filme;
-
-
 
 static int qtdUsuarios = 0;
 
 typedef struct
 {
     int id;
-    char nome[30];
-    char senha[30];
+    char *nome;
+    char *senha;
     char **historico;
 } Usuario;
 
@@ -31,15 +22,16 @@ typedef struct
 */
 
 
-int criarMenu();
 
 
-Usuario *carregarUsuarios( );
+Usuario *carregarUsuarios();
 
 int realizarLogin();
 
 int realizarCadastro();
 
-void procurarFilme();
+
+void perfilUsuario(); 
+
 
 #endif
