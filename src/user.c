@@ -1,5 +1,6 @@
 #include "user.h"
-
+#include "filme.h"
+#include "util.h"
 char *lerLinha()
 {
     int caracter;
@@ -67,7 +68,7 @@ Usuario *carregarUsuarios()
     return user;
 }
 
-int realizarLogin()
+int realizarLogin(Usuario *usuario)
 {
     Usuario *usuarios = carregarUsuarios();
 
@@ -100,6 +101,8 @@ int realizarLogin()
             if (!strcmp(senha, usuarios[i].senha)) // verifica se a senha do usuario confere.
             {
                 retorno = 1;
+            
+
             }
             else
             {
@@ -116,7 +119,7 @@ int realizarLogin()
             return retorno;
         }
     }
-    
+
     system("clear");
     printf("Usuário não cadastrado.\n");
 
@@ -158,7 +161,7 @@ int realizarCadastro()
         {
             system("clear");
             printf("Usuário já cadastrado.\n");
-            
+
             return 0;
         }
     }
@@ -204,4 +207,35 @@ int realizarCadastro()
     }
 
     return 0;
+}
+
+void perfilUsuario()
+{
+
+    system("clear");
+    printf("D ou N - Historico ordenado por data ou por Nota\n");
+    printf("2 - Excluir minha conta :(\n");
+    printf("3 - Voltar\n");
+
+    char c = getchar();
+
+    switch (c)
+    {
+    case 'D':
+
+        break;
+
+    case 'N':
+
+        break;
+    case '2':
+
+        break;
+    case '3':
+
+        break;
+
+    default:
+        break;
+    }
 }

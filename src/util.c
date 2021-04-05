@@ -1,5 +1,6 @@
+#include "user.h"
 
-int criarMenuLogin()
+int criarMenuLogin(Usuario *usuario)
 {
     int resultado = 0; // 0 = não logado | 1 = logado | 2 = sair
     char entrada;
@@ -15,12 +16,12 @@ int criarMenuLogin()
     switch (entrada)
     {
     case '1':
-        resultado = realizarLogin();
+        resultado = realizarLogin(usuario);
         break;
     case '2':
         if (realizarCadastro())
         {
-            resultado = realizarLogin();
+            resultado = realizarLogin(usuario);
         }
         break;
     case '3':
@@ -31,7 +32,7 @@ int criarMenuLogin()
     return resultado;
 }
 
-int criarMenuPrincipal()
+void criarMenuPrincipal()
 {
 
     printf("\n**LOCADORA VIRTUAL**\n\n");
@@ -49,9 +50,10 @@ int criarMenuPrincipal()
     {
     case '1':
         listarFilmes(0);
+        criarMenuPrincipal();
         break;
     case '2':
-
+        perfilUsuario(); 
         break;
     case '3':
 
@@ -66,5 +68,5 @@ int criarMenuPrincipal()
     }
 
     // system("clear");
-    return 0;
+    
 }

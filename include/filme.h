@@ -30,7 +30,7 @@ Filme *carregarFilmes();
 void procurarFilme();
 
 
-void verHistorico(Usuario usuario); 
+void verHistorico(); 
 
 
 

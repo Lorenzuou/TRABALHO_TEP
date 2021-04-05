@@ -55,7 +55,8 @@ void listarFilmes(int m)
     system("clear");
     if (m >= qtdFilmes)
     {
-        criarMenuPrincipal();
+        system("clear");
+        
       
 
     }
@@ -88,7 +89,7 @@ void listarFilmes(int m)
     else if (!isdigit(c) || c == '0')
     {
         system("clear");
-        criarMenuPrincipal();
+        
       
        
     }

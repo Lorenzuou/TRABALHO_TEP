@@ -8,7 +8,9 @@
 
 
 int main(int argc, char *argv[])
+ 
 {
+    Usuario usuarioLogado;
     if (argc == 1 || atoi(argv[1]))
     {
         int resultado = 0;

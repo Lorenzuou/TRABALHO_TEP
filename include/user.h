@@ -5,9 +5,10 @@
 #include <string.h>
 #include<ctype.h> 
 #include "util.h"
+#include "filme.h"
 
 
-#define TAM 20
+#define TAM 100
 
 static int qtdUsuarios = 0;
 
@@ -28,7 +29,7 @@ typedef struct
 
 Usuario *carregarUsuarios();
 
-int realizarLogin();
+int realizarLogin(Usuario *usuario);
 
 int realizarCadastro();
 
