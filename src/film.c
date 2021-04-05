@@ -38,8 +38,6 @@ Filme *carregarFilmes()
     return filme;
 }
 
-
-
 // void verHistorico(Usuario usuario)
 // {
 //     Filme *filmes = carregarFilmes();
@@ -50,7 +48,7 @@ Filme *carregarFilmes()
 //     fclose(file);
 // }
 
-void listarFilmes(int m, char* nome)
+void listarFilmes(int m, char *nome)
 {
 
     Filme *filmes = carregarFilmes();
@@ -58,9 +56,6 @@ void listarFilmes(int m, char* nome)
     if (m >= qtdFilmes)
     {
         system("clear");
-        
-      
-
     }
 
     printf("LISTA DE FILMES qtd %d\n", qtdFilmes);
@@ -79,31 +74,26 @@ void listarFilmes(int m, char* nome)
 
     getchar();
     char c;
-    c = getchar(); 
+    c = getchar();
     getchar();
     if (c == 'M' || c == 'm')
     {
 
         printf("\n\n Opcao: %c\n", c);
-        listarFilmes(m + 5,nome);
-     
+        listarFilmes(m + 5, nome);
     }
     else if (!isdigit(c) || c == '0')
     {
-        
-         
-     
-       
     }
     else
     {
         for (int i = m; i < 5 + m; i++)
         {
-            if (c  == i + '0')
+            if (c == i + '0')
             {
                 system("clear");
-                assistirFilme(filmes[i-1],nome);
-                break; 
+                assistirFilme(filmes[i - 1], nome);
+                break;
             }
         }
     }
@@ -119,24 +109,21 @@ void procurarFilme()
     }
 }
 
-void assistirFilme(Filme filme, char*nome)
+void assistirFilme(Filme filme, char *nome)
 {
-  
+
     printf("Filme: %s \n", filme.nome);
     printf("Nota: %.02f \n", filme.nota);
 
     time_t t = time(NULL);
     struct tm tm = *localtime(&t);
     printf("Data que assistiu: %02d/%02d/%d\n", tm.tm_mday, tm.tm_mon + 1, tm.tm_year + 1900);
-    
-    FILE *file = fopen("data/historicos.csv","a"); 
-    fprintf(file, "\n%s,%s", nome,  filme.nome);
+
+    FILE *file = fopen("data/historicos.csv", "a");
+    fprintf(file, "\n%s,%s", nome, filme.nome);
     fclose(file);
 
-
-
-
-    printf("\nPressione enter par voltar. "); 
-    getchar(); 
+    printf("\nPressione enter par voltar. ");
+    getchar();
     system("clear");
 }
