@@ -50,10 +50,26 @@ void criarMenuPrincipal(Usuario *usuario)
     entrada = getchar();
     // scanf("%c", &entrada);
 
+    char vetor[100];
+
+    vetor[0] = 'a';
+    vetor[1] = 'b';
+    vetor[2] = 'c';
+    vetor[3] = '\0';
+
+    int listar = 1;
+    int m = 0;
     switch (entrada)
     {
     case '1':
-        listarFilmes(0,usuario->nome);
+
+        while (listar)
+        {
+
+            listar = listarFilmes(m, usuario->nome);
+            m += 10;
+        }
+
         criarMenuPrincipal(&usuario);
         break;
     case '2':
@@ -63,6 +79,7 @@ void criarMenuPrincipal(Usuario *usuario)
         break;
     case '3':
 
+        printf("\n%d", allocString(vetor));
         break;
     case '4':
 
@@ -229,10 +246,6 @@ int realizarCadastro()
     printf("\nConfirme sua senha: ");
     confSenha = lerLinha();
 
-    printf("%s\n", novoUsuario.nome);
-    printf("%s\n", novoUsuario.senha);
-    printf("%s\n", confSenha);
-
     for (int i = 0; i < qtdUsuarios; i++)
     {
         if (!strcmp(novoUsuario.nome, usuarios[i].nome)) // verifica se há um usuario com o que foi digitado
@@ -246,24 +259,16 @@ int realizarCadastro()
 
     if (!strcmp(confSenha, novoUsuario.senha))
     {
-        int posicao = 0;
-        char caracter;
-
-        while (caracter != '\n')
+        int i = 0;
+        for (i = 0; i < strlen(novoUsuario.senha); i++)
         {
-            caracter = novoUsuario.senha[posicao];
-
-            if (!isalnum(caracter))
+            if (!isalnum(novoUsuario.senha[i]))
             {
-                system("clear");
+                //system("clear");
                 printf("Senha fora do padrão.\n");
 
                 return 0;
             }
-
-            printf("%c\n", caracter);
-
-            posicao++;
         }
 
         FILE *file = fopen("data/usuarios.csv", "a");
@@ -289,6 +294,24 @@ int realizarCadastro()
 
 void excluirConta(char *nome)
 {
+    Usuario *usuarios = carregarUsuarios();
+    FILE *file = fopen("data/usuarios.csv", "w") ;
+
+    printf("%d",qtdUsuarios);
+    fclose(file);
+
+    file  = fopen("data/historicos.csv", "a");
+
+    for (int i = 0; i < qtdUsuarios; i++)
+    {
+         if (strcmp(usuarios[i].nome, nome))
+         {
+             fprintf("%s,%s",usuarios[i].nome,usuarios[i].senha);
+         }else{ 
+             fprintf("-%s,%s",usuarios[i].nome,usuarios[i].senha); // adiciona o marcador de conta suspensa
+         }
+    }
+    fclose(file);
 }
 
 void verHistorico(Usuario usuario, int ordem)

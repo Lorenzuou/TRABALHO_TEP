@@ -4,38 +4,40 @@
 
 Filme *carregarFilmes()
 {
-    Filme *filme;
-    filme = (Filme *)malloc(sizeof(Filme) * TAM_F);
     qtdFilmes = 0;
 
-    FILE *file = fopen("data/filmes-pequeno.csv", "r");
+    Filme *filmes;
+    filmes = (Filme *)malloc(sizeof(Filme) * TAM_F);
 
+    FILE *file = fopen("data/filmes-grande.csv", "r");
+
+    int fator = 2;
     char linha[1024];
 
     while (fgets(linha, 1024, file))
     {
-        if (qtdFilmes + 1 == TAM_F)
+        if (qtdFilmes % TAM_F)
         {
-            filme = realloc(filme, sizeof(Filme) * TAM_F * 2);
+            filmes = realloc(filmes, sizeof(Filme) * (TAM_F + 1) * fator++);
         }
-        filme[qtdFilmes].nome = malloc(sizeof(char) * 1000);
-        filme[qtdFilmes].sinopse = malloc(sizeof(char) * 1000);
 
-        strcpy(filme[qtdFilmes].nome, strtok(linha, ","));
-        // filme[qtdFilmes].nome = strtok(linha, ",");
-        sscanf(strtok(NULL, ","), "%d", &filme[qtdFilmes].duracao);
-        sscanf(strtok(NULL, ","), "%d", &filme[qtdFilmes].ano);
-        sscanf(strtok(NULL, ","), "%f", &filme[qtdFilmes].nota);
-        // filme[qtdFilmes].sinopse = strtok(NULL, "");
+        filmes[qtdFilmes].nome = malloc(sizeof(char) * 1000);
+        filmes[qtdFilmes].sinopse = malloc(sizeof(char) * 1000);
 
-        strcpy(filme[qtdFilmes].sinopse, strtok(NULL, ""));
+        strcpy(filmes[qtdFilmes].nome, strtok(linha, ","));
+
+        sscanf(strtok(NULL, ","), "%d", &filmes[qtdFilmes].ano);
+        sscanf(strtok(NULL, ","), "%d", &filmes[qtdFilmes].duracao);
+        sscanf(strtok(NULL, ","), "%f", &filmes[qtdFilmes].nota);
+
+        strcpy(filmes[qtdFilmes].sinopse, strtok(NULL, ""));
 
         qtdFilmes++;
     };
 
-    // fclose(file);
+    fclose(file);
 
-    return filme;
+    return filmes;
 }
 
 // void verHistorico(Usuario usuario)
@@ -48,55 +50,70 @@ Filme *carregarFilmes()
 //     fclose(file);
 // }
 
-void listarFilmes(int m, char *nome)
+int listarFilmes(int m, char *nome)
 {
-
     Filme *filmes = carregarFilmes();
-    system("clear");
+    char entrada[3];
+
+    //system("clear");
+
     if (m >= qtdFilmes)
     {
-        system("clear");
+        printf("Fim de filmes disponiveis\n");
     }
 
-    printf("LISTA DE FILMES qtd %d\n", qtdFilmes);
+    printf("---------------------------\n");
+    printf("LISTA DE FILMES | QTD.: %d\n", qtdFilmes);
+    printf("---------------------------\n\n");
+
+    printf("Digite o id do filme que deseja assistir:\n\n");
+
     int i = 0;
-    for (i = m; i < 5 + m; i++)
+    for (i = m; i < 10 + m; i++)
     {
-        printf("%d- <%s>\n", i + 1, filmes[i].nome);
         if (i >= qtdFilmes)
         {
             break;
         }
+        printf("%d- <%s>\n", i + 1, filmes[i].nome);
     }
-    printf("M - Mais filmes\n");
-    printf("0 - Voltar\n");
+
+    printf("\nM - Mais filmes\n");
+    printf("0 - Voltar\n\n");
     printf("Opcao: ");
 
     getchar();
-    char c;
-    c = getchar();
-    getchar();
-    if (c == 'M' || c == 'm')
-    {
+    scanf("%s", &entrada);
+    printf("\nEntrada: %s\n\n", entrada);
 
-        printf("\n\n Opcao: %c\n", c);
-        listarFilmes(m + 5, nome);
-    }
-    else if (!isdigit(c) || c == '0')
+    if (entrada[0] == 'M' || entrada[0] == 'm')
     {
+        return 1;
+    }
+    else if (entrada[0] == '0')
+    {
+        return 0;
     }
     else
     {
-        for (int i = m; i < 5 + m; i++)
-        {
-            if (c == i + '0')
-            {
-                system("clear");
-                assistirFilme(filmes[i - 1], nome);
-                break;
-            }
-        }
+        // for (int i = m; i < 5 + m; i++)
+        // {
+        //     if (c == i + '0')
+        //     {
+
+        //         assistirFilme(filmes[i - 1], nome);
+        //         break;
+        //     }
+        // }
+        //
+        //assistirFilme(filmes[i - 1], nome);
+
+        int posicao = 0;
+        sscanf(entrada, "%d", &posicao);
+
+        assistirFilme(filmes[posicao - 1], nome);
     }
+    free(filmes);
 }
 
 void procurarFilme()
@@ -109,21 +126,40 @@ void procurarFilme()
     }
 }
 
-void assistirFilme(Filme filme, char *nome)
+void assistirFilme(Filme filmes, char *nome)
 {
 
-    printf("Filme: %s \n", filme.nome);
-    printf("Nota: %.02f \n", filme.nota);
-
-    time_t t = time(NULL);
-    struct tm tm = *localtime(&t);
-    printf("Data que assistiu: %02d/%02d/%d\n", tm.tm_mday, tm.tm_mon + 1, tm.tm_year + 1900);
-
-    FILE *file = fopen("data/historicos.csv", "a");
-    fprintf(file, "\n%s,%s", nome, filme.nome);
-    fclose(file);
-
-    printf("\nPressione enter par voltar. ");
-    getchar();
     system("clear");
+
+    printf("Filme: %s \n", filmes.nome);
+    printf("Ano de lancamento: %d \n", filmes.ano);
+    printf("Duracao: %d min\n", filmes.duracao);
+
+    printf("Avaliacao: %.02f \n", filmes.nota);
+
+    printf("Sinopse: %s \n", filmes.sinopse);
+
+    printf("1 - Assistir \n");
+    printf("2 - Voltar \n");
+    char c;
+    getchar(); 
+    c = getchar();
+    if(c == '1'){ 
+        
+        float nota; 
+        printf("\nDigite a sua nota para o filme: ");
+        scanf("%f",&nota);
+        
+        char data[11];
+        char c; 
+        printf("\nDigite a data que você viu o filme: ");
+        
+        scanf("%s",data);
+        // data[11] = '\0';
+        FILE *file = fopen("data/historicos.csv", "a");
+        fprintf(file, "\n%s,%s,%.02f,%s", nome, filmes.nome,nota,data);
+        fclose(file);
+    }
+getchar(); 
+    
 }

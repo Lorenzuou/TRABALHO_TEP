@@ -35,7 +35,7 @@ void procurarFilme();
 
 
 
-void listarFilmes(int m, char* nome); 
+int listarFilmes(int m, char* nome); 
 
 
 
