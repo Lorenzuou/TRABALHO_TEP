@@ -12,14 +12,6 @@
 
 
 
-int criarMenuLogin(); 
-
-
-void criarMenuPrincipal();
-
-
-
-
 
 
 

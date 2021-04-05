@@ -5,7 +5,7 @@
 Filme *carregarFilmes()
 {
     Filme *filme;
-    filme = (Filme *)malloc(sizeof(Filme) * TAM);
+    filme = (Filme *)malloc(sizeof(Filme) * TAM_F);
     qtdFilmes = 0;
 
     FILE *file = fopen("data/filmes-pequeno.csv", "r");
@@ -14,9 +14,9 @@ Filme *carregarFilmes()
 
     while (fgets(linha, 1024, file))
     {
-        if (qtdFilmes + 1 == TAM)
+        if (qtdFilmes + 1 == TAM_F)
         {
-            filme = realloc(filme, sizeof(Filme) * TAM * 2);
+            filme = realloc(filme, sizeof(Filme) * TAM_F * 2);
         }
         filme[qtdFilmes].nome = malloc(sizeof(char) * 1000);
         filme[qtdFilmes].sinopse = malloc(sizeof(char) * 1000);
@@ -38,15 +38,17 @@ Filme *carregarFilmes()
     return filme;
 }
 
-void verHistorico(Usuario usuario)
-{
-    Filme *filmes = carregarFilmes();
-    FILE *file = fopen("data/historicos.csv", "r");
 
-    char linha[1024];
 
-    fclose(file);
-}
+// void verHistorico(Usuario usuario)
+// {
+//     Filme *filmes = carregarFilmes();
+//     FILE *file = fopen("data/historicos.csv", "r");
+
+//     char linha[1024];
+
+//     fclose(file);
+// }
 
 void listarFilmes(int m)
 {
@@ -88,20 +90,20 @@ void listarFilmes(int m)
     }
     else if (!isdigit(c) || c == '0')
     {
-        system("clear");
         
-      
+         
+     
        
     }
     else
     {
-
         for (int i = m; i < 5 + m; i++)
         {
-            if ((int)c == i)
+            if (c  == i + '0')
             {
                 system("clear");
-                assistirFilme(filmes[i]);
+                assistirFilme(filmes[i-1]);
+                break; 
             }
         }
     }
@@ -119,11 +121,13 @@ void procurarFilme()
 
 void assistirFilme(Filme filme)
 {
-
+    char c; 
+  
     printf("Filme: %s \n", filme.nome);
-    printf("Nota: %f \n", filme.nota);
+    printf("Nota: %.02f \n", filme.nota);
 
-    time_t t = time(NULL);
+     time_t t = time(NULL);
     struct tm tm = *localtime(&t);
     printf("Data que assistiu: %02d/%02d/%d\n", tm.tm_mday, tm.tm_mon + 1, tm.tm_year + 1900);
+   
 }

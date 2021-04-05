@@ -16,13 +16,13 @@ int main(int argc, char *argv[])
         int resultado = 0;
         while (resultado == 0)
         {
-            resultado = criarMenuLogin();
+            resultado = criarMenuLogin(&usuarioLogado);
         }
 
         if (resultado == 1)
         {
             system("clear");
-            criarMenuPrincipal();
+            criarMenuPrincipal(&usuarioLogado);
         }
     }
     else

@@ -7,7 +7,7 @@
 #include<string.h>
 #include <time.h>
 
-#define TAM 20
+#define TAM_F 20
 
 
 static int  qtdFilmes = 0; 
@@ -30,7 +30,7 @@ Filme *carregarFilmes();
 void procurarFilme();
 
 
-void verHistorico(); 
+// void verHistorico(); 
 
 
 

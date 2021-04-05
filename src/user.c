@@ -1,6 +1,79 @@
 #include "user.h"
 #include "filme.h"
 #include "util.h"
+
+int criarMenuLogin(Usuario *usuario)
+{
+    int resultado = 0; // 0 = não logado | 1 = logado | 2 = sair
+    char entrada;
+
+    printf("\n**LOCADORA VIRTUAL**\n\n");
+    printf("1.Login\n");
+    printf("2.Cadastro\n");
+    printf("3.Sair\n\n");
+
+    printf("Opção: ");
+    scanf("%c", &entrada);
+
+    switch (entrada)
+    {
+    case '1':
+        resultado = realizarLogin(usuario);
+        break;
+    case '2':
+        if (realizarCadastro())
+        {
+            resultado = realizarLogin(usuario);
+        }
+        break;
+    case '3':
+        resultado = 2;
+        break;
+    }
+
+    return resultado;
+}
+
+void criarMenuPrincipal(Usuario *usuario)
+{
+
+    printf("\n**LOCADORA VIRTUAL**\n\n");
+    printf("1.Listar filmes\n");
+    printf("2.Meu perfil\n");
+    printf("3.Pesquisar filme\n");
+    printf("4.Sair\n\n");
+
+    printf("Opção: ");
+    char entrada;
+    entrada = getchar();
+    // scanf("%c", &entrada);
+
+    switch (entrada)
+    {
+    case '1':
+        listarFilmes(0);
+        criarMenuPrincipal(&usuario);
+        break;
+    case '2':
+        perfilUsuario(*usuario);
+        getchar();
+        criarMenuLogin(&usuario);
+        break;
+    case '3':
+
+        break;
+    case '4':
+
+        break;
+
+    default:
+
+        break;
+    }
+
+    // system("clear");
+}
+
 char *lerLinha()
 {
     int caracter;
@@ -101,8 +174,8 @@ int realizarLogin(Usuario *usuario)
             if (!strcmp(senha, usuarios[i].senha)) // verifica se a senha do usuario confere.
             {
                 retorno = 1;
-            
-
+                usuario->nome = malloc(sizeof(char) * TAM);
+                strcpy(usuario->nome, usuarios[i].nome);
             }
             else
             {
@@ -209,26 +282,61 @@ int realizarCadastro()
     return 0;
 }
 
-void perfilUsuario()
+void excluirConta(char *nome)
+{
+}
+
+void verHistorico(Usuario usuario, int ordem)
+{
+  //  Filme *filmes = carregarHistoricos();
+
+    // for(int i = 0; i<qtdFilmes; i++){ 
+    //     if
+    // }
+
+
+
+
+    // if (ordem)
+    // {
+
+    //     int i, j;
+    //     for (i = 0; i < n - 1; i++)
+
+    //         // Last i elements are already in place
+    //         for (j = 0; j < n - i - 1; j++)
+    //             if (arr[j] > arr[j + 1])
+    //             {
+    //                 int temp = *xp;
+    //                 *xp = *yp;
+    //                 *yp = temp;
+    //             }
+    // }
+}
+
+void perfilUsuario(Usuario usuario)
 {
 
     system("clear");
     printf("D ou N - Historico ordenado por data ou por Nota\n");
     printf("2 - Excluir minha conta :(\n");
     printf("3 - Voltar\n");
-
+    getchar();
     char c = getchar();
 
     switch (c)
     {
     case 'D':
-
+        verHistorico(usuario, 0);
         break;
 
     case 'N':
-
+        verHistorico(usuario, 1);
         break;
     case '2':
+        excluirConta(usuario.nome);
+        system("clear");
+        printf("\nConta excluida com sucesso!\n");
 
         break;
     case '3':

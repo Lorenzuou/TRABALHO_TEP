@@ -1,5 +1,20 @@
 {
     "files.associations": {
-        "user.h": "c"
+        "user.h": "c",
+        "array": "c",
+        "*.tcc": "c",
+        "string": "c",
+        "unordered_map": "c",
+        "memory": "c",
+        "optional": "c",
+        "string_view": "c",
+        "fstream": "c",
+        "istream": "c",
+        "ostream": "c",
+        "vector": "c",
+        "sstream": "c",
+        "streambuf": "c",
+        "functional": "c",
+        "tuple": "c"
     }
 }
