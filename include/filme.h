@@ -1,6 +1,7 @@
 #ifndef FILME_H
 #define FILME_H
 #include "user.h"
+#include "util.h"
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>

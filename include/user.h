@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include<ctype.h> 
+#include "util.h"
+
 
 #define TAM 20
 
