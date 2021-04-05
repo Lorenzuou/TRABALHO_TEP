@@ -2,6 +2,8 @@
 #include "filme.h"
 #include "util.h"
 
+static Usuario usuarioLogado;
+
 int criarMenuLogin(Usuario *usuario)
 {
     int resultado = 0; // 0 = não logado | 1 = logado | 2 = sair
@@ -51,7 +53,7 @@ void criarMenuPrincipal(Usuario *usuario)
     switch (entrada)
     {
     case '1':
-        listarFilmes(0);
+        listarFilmes(0,usuario->nome);
         criarMenuPrincipal(&usuario);
         break;
     case '2':
@@ -176,6 +178,9 @@ int realizarLogin(Usuario *usuario)
                 retorno = 1;
                 usuario->nome = malloc(sizeof(char) * TAM);
                 strcpy(usuario->nome, usuarios[i].nome);
+
+                usuarioLogado.nome = malloc(sizeof(char) * TAM);
+                strcpy(usuario->nome, usuarios[i].nome);
             }
             else
             {
@@ -288,14 +293,11 @@ void excluirConta(char *nome)
 
 void verHistorico(Usuario usuario, int ordem)
 {
-  //  Filme *filmes = carregarHistoricos();
+    //  Filme *filmes = carregarHistoricos();
 
-    // for(int i = 0; i<qtdFilmes; i++){ 
+    // for(int i = 0; i<qtdFilmes; i++){
     //     if
     // }
-
-
-
 
     // if (ordem)
     // {

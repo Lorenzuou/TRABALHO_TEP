@@ -50,7 +50,7 @@ Filme *carregarFilmes()
 //     fclose(file);
 // }
 
-void listarFilmes(int m)
+void listarFilmes(int m, char* nome)
 {
 
     Filme *filmes = carregarFilmes();
@@ -85,7 +85,7 @@ void listarFilmes(int m)
     {
 
         printf("\n\n Opcao: %c\n", c);
-        listarFilmes(m + 5);
+        listarFilmes(m + 5,nome);
      
     }
     else if (!isdigit(c) || c == '0')
@@ -102,7 +102,7 @@ void listarFilmes(int m)
             if (c  == i + '0')
             {
                 system("clear");
-                assistirFilme(filmes[i-1]);
+                assistirFilme(filmes[i-1],nome);
                 break; 
             }
         }
@@ -119,15 +119,24 @@ void procurarFilme()
     }
 }
 
-void assistirFilme(Filme filme)
+void assistirFilme(Filme filme, char*nome)
 {
-    char c; 
   
     printf("Filme: %s \n", filme.nome);
     printf("Nota: %.02f \n", filme.nota);
 
-     time_t t = time(NULL);
+    time_t t = time(NULL);
     struct tm tm = *localtime(&t);
     printf("Data que assistiu: %02d/%02d/%d\n", tm.tm_mday, tm.tm_mon + 1, tm.tm_year + 1900);
-   
+    
+    FILE *file = fopen("data/historicos.csv","a"); 
+    fprintf(file, "\n%s,%s", nome,  filme.nome);
+    fclose(file);
+
+
+
+
+    printf("\nPressione enter par voltar. "); 
+    getchar(); 
+    system("clear");
 }

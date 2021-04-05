@@ -35,11 +35,11 @@ void procurarFilme();
 
 
 
-void listarFilmes(); 
+void listarFilmes(int m, char* nome); 
 
 
 
-void assistirFilme(Filme filme);
+void assistirFilme(Filme filme, char* nome);
 
 
 
