@@ -11,6 +11,7 @@
 #define TAM 100
 
 static int qtdUsuarios = 0;
+static int qtdUsuariosInativos = 0;
 
 typedef struct
 {

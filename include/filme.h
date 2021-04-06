@@ -11,7 +11,7 @@
 
 
 static int  qtdFilmes = 0; 
-
+static int qtdFilmesHistorico = 0;
 typedef struct
 {
     int id;
@@ -24,13 +24,27 @@ typedef struct
 } Filme;
 
 
+typedef struct
+{
+    char *nomeUsuario; 
+    char *nomeFilme;
+    char data[11];
+    float nota; 
+ 
+    
+} FilmeHistorico;
+
+
+FilmeHistorico *carregarFilmesHistorico(char* nome); 
+
+void ordernarPorNota(char* nome); 
+
 
 Filme *carregarFilmes();
 
-void procurarFilme();
+void procurarFilme(char* nome);
 
 
-// void verHistorico(); 
 
 
 
