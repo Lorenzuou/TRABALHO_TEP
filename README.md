@@ -149,6 +149,7 @@ Ao assistir o filme, **opção 1**, é solicitado sua avaliação (float) e a da
     <entrada>
     Data: <entrada>
 
+A opção voltar deve sempre retornar à tela anterior. Para ficar claro, observem a imagem do fluxo do programa para ter certeza de onde as opções devem levar.
 
 #### Opção 2 - Meu perfil:
 
@@ -167,7 +168,25 @@ Caso o usuário entre com as opções *D* ou *N*, é apresentado o histórico de
         <data2> - <filme2>: <avaliacao2>
    
 
-A opção 2  - Permite excluir a conta do usuário. A exclusão pode ser apenas marcando uma  conta como inativa. Neste caso, a conta não precisa ser excluída, mas apenas marcada como inativa, impedindo que alguém logue nela e permitindo que uma nova conta com mesmo usuário seja criada. A solução de apenas inativar a conta leva a modificações no login, que passa a ter que verificar se uma conta é ativa ou não.
+A opção 2 permite excluir a conta do usuário. A exclusão pode ser apenas marcando uma  conta como inativa. Neste caso, a conta não precisa ser excluída, mas apenas marcada como inativa, impedindo que alguém logue nela e permitindo que uma nova conta com mesmo usuário seja criada. A solução de apenas inativar a conta leva a modificações no login, que passa a ter que verificar se uma conta é ativa ou não.
+
+#### Opção 3 - Procurar filme
+
+Oferece a seguinte opção ao usuário:
+
+    Nome do filme: <entrada>
+
+A tela seguinte (que aparece após a submissão do nome o filme) deve conter todos os filmes que possuem a string que foi escrita dentro de seus nomes. Por exemplo, imagine que na base de dados tenham os filmes: Jogos Mortais 1, Jogos Mortais 2, O jogo da imitação, Jogando Xadrez com a Morte. Agora, na busca por um filme, submetemos a palavra "jogo". Os resultados da busca devem ser:
+
+    1- Jogos Mortais 1
+    2- Jogos Mortais 2
+    3- O jogo da imitação
+
+Perceba que aqui, "Jogando Xadrez com a Morte" não aparece pois o título não possui a string "jogo" dentro dela.
+
+#### Opção 4 - Sair
+
+Essa opção te leva de volta ao menu de login inicial. A partir daí você pode logar em outra conta, criar uma nova conta ou encerrar o programa.
 
 ### 2.2. Verbosidade (verbosity)
 
@@ -211,9 +230,9 @@ onde título e descrição são strings de, no máximo, 128 e 256 caracteres res
 
 Para o arquivo de usuários, são dispostas as informações
 
-    usuário,senha,histórico1,avaliação1,histórico2,avaliação2,...
+    usuário,senha,histórico1,avaliação1,data1,histórico2,avaliação2,data2,...
 
-em que usuário e senha são strings, históricos são inteiros que representam o id de um filme (que é apenas a linha correspondente do filme no respectivo arquivo) e avaliação é uma nota dada ao filme pelo usuário (notas negativas significam que o usuário não avaliou o filme quando assistiu).
+em que usuário e senha são strings de, no máximo, 128 caracteres, históricos são inteiros que representam o id de um filme (que é apenas a linha correspondente do filme no respectivo arquivo), avaliação é uma nota dada ao filme pelo usuário (notas negativas significam que o usuário não avaliou o filme quando assistiu) e datas são strings no formato dd/mm/yyyy.
 
 **Vale lembrar:** o campo de descrição (e apenas o de descrição) pode conter vírgulas! Nesse caso, o campo é envolvido por aspas duplas `"`, sendo que o que se encontra dentro delas deve ser considerado como um campo só!
 
