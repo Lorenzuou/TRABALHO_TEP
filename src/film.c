@@ -2,6 +2,111 @@
 #include "user.h"
 #include "util.h"
 
+void freeFilmes(Filme *filmes)
+{
+
+    for (int i = 0; i < qtdFilmes; i++)
+    {
+        free(filmes[i].nome);
+        free(filmes[i].sinopse);
+    }
+    free(filmes);
+}
+
+FilmeHistorico *carregarFilmesHistorico(char *nome)
+{
+    FilmeHistorico *filmes;
+    filmes = (FilmeHistorico *)malloc(sizeof(Filme) * TAM_F);
+    qtdFilmesHistorico = 0;
+    FILE *file = fopen("data/historicos.csv", "r");
+    int fator = 2;
+
+    char linha[1024];
+
+    while (fgets(linha, 1024, file))
+    {
+        if (qtdFilmes % TAM_F)
+        {
+            filmes = realloc(filmes, sizeof(FilmeHistorico) * (TAM_F + 1) * fator++);
+        }
+
+        filmes[qtdFilmesHistorico].nomeUsuario = malloc(sizeof(char) * 1000);
+        filmes[qtdFilmesHistorico].nomeFilme = malloc(sizeof(char) * 1000);
+
+        strcpy(filmes[qtdFilmesHistorico].nomeUsuario, strtok(linha, ","));
+        strcpy(filmes[qtdFilmesHistorico].nomeFilme, strtok(NULL, ","));
+        sscanf(strtok(NULL, ","), "%f", &filmes[qtdFilmesHistorico].nota);
+        sscanf(strtok(NULL, ","), "%s", &filmes[qtdFilmesHistorico].data);
+
+        qtdFilmesHistorico++;
+    };
+
+    fclose(file);
+
+    return filmes;
+}
+
+void ordernarPorNota(char *nome)
+{
+
+    int max = 0;
+
+    char auxiliarNome[100];
+    int auxiliarNota = 0;
+
+    FilmeHistorico *filmesH = carregarFilmesHistorico(nome);
+
+    printf("---------------------------\n");
+    printf("HISTÓRICO | %s\n", nome);
+    printf("---------------------------\n\n");
+
+    for (int i = 0; i < qtdFilmesHistorico; i++)
+    {
+        if (!strcmp(nome, filmesH[i].nomeUsuario))
+        {
+            printf("%s - %s: %.01f\n", filmesH[i].data, filmesH[i].nomeFilme, filmesH[i].nota);
+        }
+    }
+
+    char *auxiliarNome;
+
+    //     //selection sort para ordernar as cidades por quantidade de casos confirmados
+        for (int i = 0; i < qtdFilmesHistorico; i++)
+        {
+            max = i;
+            for (int j = i + 1; j < qtdFilmesHistorico + 1; j++)
+            {
+                if (filmesH[j].nota > filmesH[max].nota)
+                {
+                    max = j;
+                }
+            }
+
+            
+
+            //verificando se existe uma cidade com número de casos maior que a atual
+            if (max != i)
+            {
+                strcpy(auxiliarNome, filmesH[i].auxiliarNome);
+                auxiliarNome = filmesH[max].auxiliarNome;
+
+                strcpy(filmesH[max].nomeUsuario, filmesH[i].nomeUsuario);
+                filmesH[max].confirmados = cidades[i].confirmados;
+
+                strcpy(cidades[i].nome, auxiliarNome);
+                cidades[i].confirmados = auxiliarNota;
+            }
+        }
+
+    //     //exibindo o top n casos confirmados
+    //     for (i = 0; i < n; i++)
+    //     {
+    //         fprintf(arquivo, "%s: %d casos\n", cidades[i].nome, cidades[i].confirmados);
+    //     }
+
+    // free(cidades);
+}
+
 Filme *carregarFilmes()
 {
     qtdFilmes = 0;
@@ -39,16 +144,6 @@ Filme *carregarFilmes()
 
     return filmes;
 }
-
-// void verHistorico(Usuario usuario)
-// {
-//     Filme *filmes = carregarFilmes();
-//     FILE *file = fopen("data/historicos.csv", "r");
-
-//     char linha[1024];
-
-//     fclose(file);
-// }
 
 int listarFilmes(int m, char *nome)
 {
@@ -113,17 +208,36 @@ int listarFilmes(int m, char *nome)
 
         assistirFilme(filmes[posicao - 1], nome);
     }
-    free(filmes);
+    freeFilmes(filmes);
 }
 
-void procurarFilme()
+void procurarFilme(char *nomeUsuario)
 {
 
-    Filme *filmes = carregarFilmes();
+    char pesquisa[100];
+    printf("Pesquisa de filme: ");
+    scanf("%s", pesquisa);
 
+    Filme *filmes = carregarFilmes();
+    printf("|ID do filme | Nome do filme\n");
     for (int i = 0; i < qtdFilmes; i++)
     {
+        if (strstr(filmes[i].nome, pesquisa))
+        {
+            printf("|%d|  - %s \n", i, filmes[i].nome);
+        }
     }
+    int posicao;
+    getchar();
+    printf("\nDigite o numero do filme ou digite 0 para voltar: ");
+    scanf("%d", &posicao);
+
+    if (posicao != 0)
+    {
+        assistirFilme(filmes[posicao - 1], nomeUsuario);
+    }
+
+    freeFilmes(filmes);
 }
 
 void assistirFilme(Filme filmes, char *nome)
@@ -142,24 +256,24 @@ void assistirFilme(Filme filmes, char *nome)
     printf("1 - Assistir \n");
     printf("2 - Voltar \n");
     char c;
-    getchar(); 
+    getchar();
     c = getchar();
-    if(c == '1'){ 
-        
-        float nota; 
+    if (c == '1')
+    {
+
+        float nota;
         printf("\nDigite a sua nota para o filme: ");
-        scanf("%f",&nota);
-        
+        scanf("%f", &nota);
+
         char data[11];
-        char c; 
+        char c;
         printf("\nDigite a data que você viu o filme: ");
-        
-        scanf("%s",data);
+
+        scanf("%s", data);
         // data[11] = '\0';
         FILE *file = fopen("data/historicos.csv", "a");
-        fprintf(file, "\n%s,%s,%.02f,%s", nome, filmes.nome,nota,data);
+        fprintf(file, "%s,%s,%.02f,%s\n", nome, filmes.nome, nota, data);
         fclose(file);
     }
-getchar(); 
-    
+    getchar();
 }
