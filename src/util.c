@@ -8,9 +8,12 @@ char *allocString (char *vetor)
   char *aux = (char *)malloc(sizeof(char) * tamanho);
 
   strcpy(aux, vetor);
+
+  //free(vetor);
   
   return aux;
 }
+
 
 
 // char *allocString (char *vetor)

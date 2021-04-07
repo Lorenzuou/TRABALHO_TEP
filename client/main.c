@@ -30,5 +30,8 @@ int main(int argc, char *argv[])
         printf("\nArgc");
     }
 
+    free(usuarioLogado.nome); 
+    free(usuarioLogado.senha); 
+
     return 0;
 }

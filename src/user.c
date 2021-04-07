@@ -93,6 +93,15 @@ void freeUsuarios(Usuario *usuarios)
     free(usuarios);
 }
 
+freeVetorChar(char **vetor, int qtd)
+{
+    for (int i = 0; i < qtd; i++)
+    {
+        free(vetor[i]);
+    }
+    free(vetor);
+}
+
 char *lerLinha()
 {
     int caracter;
@@ -128,11 +137,14 @@ char *lerLinha()
     return string;
 }
 
-Usuario *carregarInativos()
+char *carregarInativos()
 {
-    Usuario *usuarios;
-    usuarios = (Usuario *)malloc(sizeof(Usuario) * TAM);
-    qtdUsuariosInativos = 0;
+    // Usuario *usuarios;
+    // usuarios = (Usuario *)malloc(sizeof(Usuario) * TAM);
+    // qtdUsuariosInativos = 0;
+
+    char **usuarios;
+    usuarios = (char *)malloc(sizeof(char *) * TAM);
 
     FILE *file = fopen("data/inativos.csv", "r");
 
@@ -142,10 +154,10 @@ Usuario *carregarInativos()
     {
         if (qtdUsuariosInativos + 1 == TAM)
         {
-            usuarios = realloc(usuarios, sizeof(Usuario) * TAM * 2);
+            usuarios = realloc(usuarios, sizeof(char *) * TAM * 2);
         }
-        usuarios[qtdUsuariosInativos].nome = malloc(sizeof(char) * TAM);
-        strcpy(usuarios[qtdUsuariosInativos].nome, linha);
+        usuarios[qtdUsuariosInativos] = malloc(sizeof(char) * TAM);
+        strcpy(usuarios[qtdUsuariosInativos], linha);
 
         qtdUsuariosInativos++;
     };
@@ -190,7 +202,7 @@ Usuario *carregarUsuarios()
 int realizarLogin(Usuario *usuario)
 {
     Usuario *usuarios = carregarUsuarios();
-    Usuario *inativos = carregarInativos();
+    char **inativos = carregarInativos();
 
     char *nome;
     char *senha;
@@ -224,7 +236,7 @@ int realizarLogin(Usuario *usuario)
             {
                 for (int y = 0; y < qtdUsuariosInativos; y++)
                 {
-                    if (!strcmp(nome, inativos[y].nome)) // verifica se o usuario está no vetor de inativos
+                    if (!strcmp(nome, inativos[y])) // verifica se o usuario está no vetor de inativos
                     {
                         system("clear");
                         printf("Usuário inativo.\n");
@@ -259,7 +271,7 @@ int realizarLogin(Usuario *usuario)
         system("clear");
         printf("Usuário não cadastrado.\n");
     }
-
+    freeVetorChar(inativos, qtdUsuariosInativos);
     freeUsuarios(usuarios);
     free(nome);
     free(senha);
@@ -326,6 +338,11 @@ int realizarCadastro()
         system("clear");
         printf("Usuário cadastrado com sucesso!\nInsira as informações para fazer o login:\n");
 
+        freeUsuarios(usuarios);
+        free(novoUsuario.nome);
+        free(novoUsuario.senha);
+        free(confSenha);
+
         return 1;
     }
     else
@@ -334,6 +351,10 @@ int realizarCadastro()
         printf("As senhas não conferem.\n");
     }
 
+    freeUsuarios(usuarios);
+    free(novoUsuario.nome);
+    free(novoUsuario.senha);
+    freeUsuarios(usuarios);
     return 0;
 }
 
@@ -344,9 +365,8 @@ void excluirConta(char *nome)
     fclose(file);
 }
 
-
- void verHistorico(Usuario usuario, int ordem)
- {
+void verHistorico(Usuario usuario, int ordem)
+{
 
     ordernarPorNota(usuario.nome);
 
@@ -358,7 +378,7 @@ void excluirConta(char *nome)
     // fclose(file);
 
     getchar();
- }
+}
 
 void perfilUsuario(Usuario usuario)
 {

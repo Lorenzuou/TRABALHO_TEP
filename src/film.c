@@ -13,6 +13,18 @@ void freeFilmes(Filme *filmes)
     free(filmes);
 }
 
+
+void freeFilmesHistoricos(FilmeHistorico *filmes)
+{
+
+    for (int i = 0; i < qtdFilmesHistorico; i++)
+    {
+        free(filmes[i].nomeUsuario);
+        free(filmes[i].nomeFilme);
+    }
+    free(filmes);
+}
+
 FilmeHistorico *carregarFilmesHistorico(char *nome)
 {
     FilmeHistorico *filmes;
@@ -49,62 +61,62 @@ FilmeHistorico *carregarFilmesHistorico(char *nome)
 void ordernarPorNota(char *nome)
 {
 
-    int max = 0;
+    // int max = 0;
 
-    char auxiliarNome[100];
-    int auxiliarNota = 0;
+    // char auxiliarNome[100];
+    // int auxiliarNota = 0;
 
-    FilmeHistorico *filmesH = carregarFilmesHistorico(nome);
+    // FilmeHistorico *filmesH = carregarFilmesHistorico(nome);
 
-    printf("---------------------------\n");
-    printf("HISTÓRICO | %s\n", nome);
-    printf("---------------------------\n\n");
+    // printf("---------------------------\n");
+    // printf("HISTÓRICO | %s\n", nome);
+    // printf("---------------------------\n\n");
 
-    for (int i = 0; i < qtdFilmesHistorico; i++)
-    {
-        if (!strcmp(nome, filmesH[i].nomeUsuario))
-        {
-            printf("%s - %s: %.01f\n", filmesH[i].data, filmesH[i].nomeFilme, filmesH[i].nota);
-        }
-    }
+    // for (int i = 0; i < qtdFilmesHistorico; i++)
+    // {
+    //     if (!strcmp(nome, filmesH[i].nomeUsuario))
+    //     {
+    //         printf("%s - %s: %.01f\n", filmesH[i].data, filmesH[i].nomeFilme, filmesH[i].nota);
+    //     }
+    // }
 
-    char *auxiliarNome;
+    // char *auxiliarNome;
 
-    //     //selection sort para ordernar as cidades por quantidade de casos confirmados
-        for (int i = 0; i < qtdFilmesHistorico; i++)
-        {
-            max = i;
-            for (int j = i + 1; j < qtdFilmesHistorico + 1; j++)
-            {
-                if (filmesH[j].nota > filmesH[max].nota)
-                {
-                    max = j;
-                }
-            }
+    // //     selection sort para ordernar as cidades por quantidade de casos confirmados
+    //     for (int i = 0; i < qtdFilmesHistorico; i++)
+    //     {
+    //         max = i;
+    //         for (int j = i + 1; j < qtdFilmesHistorico + 1; j++)
+    //         {
+    //             if (filmesH[j].nota > filmesH[max].nota)
+    //             {
+    //                 max = j;
+    //             }
+    //         }
 
             
 
-            //verificando se existe uma cidade com número de casos maior que a atual
-            if (max != i)
-            {
-                strcpy(auxiliarNome, filmesH[i].auxiliarNome);
-                auxiliarNome = filmesH[max].auxiliarNome;
+    //         //
+    //         if (max != i)
+    //         {
+    //             strcpy(auxiliarNome, filmesH[i].nomeFilme);
+    //             auxiliarNome = filmesH[max].nomeFilme;
 
-                strcpy(filmesH[max].nomeUsuario, filmesH[i].nomeUsuario);
-                filmesH[max].confirmados = cidades[i].confirmados;
+    //             strcpy(filmesH[max].nomeUsuario, filmesH[i].nomeUsuario);
+    //             filmesH[max].confirmados = cidades[i].confirmados;
 
-                strcpy(cidades[i].nome, auxiliarNome);
-                cidades[i].confirmados = auxiliarNota;
-            }
-        }
-
-    //     //exibindo o top n casos confirmados
-    //     for (i = 0; i < n; i++)
-    //     {
-    //         fprintf(arquivo, "%s: %d casos\n", cidades[i].nome, cidades[i].confirmados);
+    //             strcpy(cidades[i].nome, auxiliarNome);
+    //             cidades[i].confirmados = auxiliarNota;
+    //         }
     //     }
 
-    // free(cidades);
+    // //     //exibindo o top n casos confirmados
+    // //     for (i = 0; i < n; i++)
+    // //     {
+    // //         fprintf(arquivo, "%s: %d casos\n", cidades[i].nome, cidades[i].confirmados);
+    // //     }
+    //freeFilmesHistoricos(filmesH); 
+    // // free(cidades);
 }
 
 Filme *carregarFilmes()
@@ -275,5 +287,6 @@ void assistirFilme(Filme filmes, char *nome)
         fprintf(file, "%s,%s,%.02f,%s\n", nome, filmes.nome, nota, data);
         fclose(file);
     }
+    
     getchar();
 }
