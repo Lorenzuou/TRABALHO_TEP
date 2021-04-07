@@ -30,7 +30,7 @@ typedef struct
 int criarMenuLogin(Usuario *usuario); 
 
 
-void criarMenuPrincipal(Usuario *usuario);
+int criarMenuPrincipal(Usuario *usuario);
 
 
 

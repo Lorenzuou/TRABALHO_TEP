@@ -4,16 +4,15 @@
 #include "../include/filme.h"
 #include "../include/util.h"
 
-
-
-
 int main(int argc, char *argv[])
- 
+
 {
     Usuario usuarioLogado;
+    int parar = 0;
+    int resultado = 0;
     if (argc == 1 || atoi(argv[1]))
     {
-        int resultado = 0;
+
         while (resultado == 0)
         {
             resultado = criarMenuLogin(&usuarioLogado);
@@ -21,17 +20,17 @@ int main(int argc, char *argv[])
 
         if (resultado == 1)
         {
-            system("clear");
-            criarMenuPrincipal(&usuarioLogado);
+            while (parar == 0)
+            {
+                system("clear");
+                parar = criarMenuPrincipal(&usuarioLogado);
+            }
         }
     }
     else
     {
         printf("\nArgc");
     }
-
-    free(usuarioLogado.nome); 
-    free(usuarioLogado.senha); 
-
+ 
     return 0;
 }

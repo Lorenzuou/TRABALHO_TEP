@@ -34,7 +34,7 @@ int criarMenuLogin(Usuario *usuario)
     return resultado;
 }
 
-void criarMenuPrincipal(Usuario *usuario)
+int criarMenuPrincipal(Usuario *usuario)
 {
 
     printf("\n**LOCADORA VIRTUAL**\n\n");
@@ -53,19 +53,20 @@ void criarMenuPrincipal(Usuario *usuario)
     switch (entrada)
     {
     case '1':
-
+    
         while (listar)
         {
             listar = listarFilmes(m, usuario->nome);
             m += 10;
         }
+        getchar();
 
         criarMenuPrincipal(&usuario);
         break;
     case '2':
         perfilUsuario(*usuario);
         getchar();
-        criarMenuLogin(&usuario);
+         criarMenuPrincipal(&usuario);
         break;
     case '3':
         procurarFilme(usuario->nome);
@@ -78,6 +79,8 @@ void criarMenuPrincipal(Usuario *usuario)
 
         break;
     }
+
+    return 1;
 
     // system("clear");
 }
@@ -144,7 +147,7 @@ char *carregarInativos()
     // qtdUsuariosInativos = 0;
 
     char **usuarios;
-    usuarios = (char *)malloc(sizeof(char *) * TAM);
+    usuarios = (char **)malloc(sizeof(char *) * TAM);
 
     FILE *file = fopen("data/inativos.csv", "r");
 
@@ -156,7 +159,7 @@ char *carregarInativos()
         {
             usuarios = realloc(usuarios, sizeof(char *) * TAM * 2);
         }
-        usuarios[qtdUsuariosInativos] = malloc(sizeof(char) * TAM);
+        usuarios[qtdUsuariosInativos] = malloc(sizeof(char*) * TAM);
         strcpy(usuarios[qtdUsuariosInativos], linha);
 
         qtdUsuariosInativos++;
@@ -236,6 +239,9 @@ int realizarLogin(Usuario *usuario)
             {
                 for (int y = 0; y < qtdUsuariosInativos; y++)
                 {
+               
+
+                    inativos[y][strcspn(inativos[y], "\n")] = NULL;
                     if (!strcmp(nome, inativos[y])) // verifica se o usuario está no vetor de inativos
                     {
                         system("clear");
