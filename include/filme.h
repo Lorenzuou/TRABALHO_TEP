@@ -35,10 +35,11 @@ typedef struct
 } FilmeHistorico;
 
 
-FilmeHistorico *carregarFilmesHistorico(char* nome); 
+FilmeHistorico *carregarFilmesHistorico(); 
 
 void ordernarPorNota(char* nome); 
 
+void ordernarPorData(char *nome); 
 
 Filme *carregarFilmes();
 
