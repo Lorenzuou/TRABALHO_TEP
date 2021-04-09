@@ -27,10 +27,10 @@ typedef struct
 
 
 
-int criarMenuLogin(Usuario *usuario); 
+int criarMenuLogin(Usuario *usuario, int verbosidade); 
 
 
-int criarMenuPrincipal(Usuario *usuario);
+int criarMenuPrincipal(Usuario *usuario , int verbosidade);
 
 
 
@@ -38,16 +38,16 @@ int criarMenuPrincipal(Usuario *usuario);
 
 Usuario *carregarUsuarios();
 
-int realizarLogin(Usuario *usuario);
+int realizarLogin(Usuario *usuario, int verbosidade);
 
-int realizarCadastro();
+int realizarCadastro(int verbosidade);
 
 
-void excluirConta(int inativado);
+void excluirConta(int inativado, int verbosidade);
 
-void verHistorico(Usuario usuario, int ordem); 
+void verHistorico(int id, int ordem, int verbosidade); 
 
-void perfilUsuario(int id); 
+int perfilUsuario(int id, int verbosidade); 
 
 
 #endif

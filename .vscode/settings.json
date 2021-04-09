@@ -15,6 +15,7 @@
         "sstream": "c",
         "streambuf": "c",
         "functional": "c",
-        "tuple": "c"
+        "tuple": "c",
+        "random": "c"
     }
 }

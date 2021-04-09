@@ -26,9 +26,9 @@ typedef struct
 
 typedef struct
 {
-    char *nomeUsuario; 
+    int idUsuario; 
     char *nomeFilme;
-    char data[11];
+    char data[20];
     float nota; 
  
     
@@ -38,24 +38,24 @@ typedef struct
 
 FilmeHistorico *carregarFilmesHistorico(); 
 
-void ordernarPorNota(char* nome); 
+void ordernarPorNota(int idUsuario); 
 
-void ordernarPorData(char *nome); 
+void ordernarPorData(int idUsuario); 
 
 Filme *carregarFilmes();
 
-void procurarFilme(char* nome);
+void procurarFilme(int verbosidade);
 
 
 
 
 
 
-int listarFilmes(int m, char* nome); 
+int listarFilmes(int m, int idUsuario, int verbosidade); 
 
 
 
-void assistirFilme(Filme filme, char* nome);
+void assistirFilme(Filme filme, int idUsuario, int verbosidade);
 
 
 
