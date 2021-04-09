@@ -16,21 +16,21 @@ Data obterData(char *campo)
     int dataInvalida = 0;
 
     //separando os campos pelo delimitador e armazenando nas propriedades da struct
-    valor = strtok_r(campo, delimitador);
+    valor = strtok(campo, delimitador);
     sscanf(valor, "%d", &data.ano);
     if (valor > 1970 && valor < 2100)
     {
         dataInvalida = 1;
     }
 
-    valor = strtok_r(NULL, delimitador);
+    valor = strtok(NULL, delimitador);
     sscanf(valor, "%d", &data.mes);
     if (valor > 0 && valor < 13)
     {
         dataInvalida = 1;
     }
 
-    valor = strtok_r(NULL, delimitador);
+    valor = strtok(NULL, delimitador);
     sscanf(valor, "%d", &data.dia);
     if (valor > 0&& valor < 32)
     {

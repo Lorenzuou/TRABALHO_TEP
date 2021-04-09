@@ -43,7 +43,7 @@ int criarMenuPrincipal(Usuario *usuario)
     printf("3.Pesquisar filme\n");
     printf("4.Sair\n\n");
 
-    printf("Opção: ");
+   
     char entrada;
     entrada = getchar();
     // scanf("%c", &entrada);
@@ -64,9 +64,9 @@ int criarMenuPrincipal(Usuario *usuario)
         criarMenuPrincipal(&usuario);
         break;
     case '2':
-        perfilUsuario(*usuario);
+        perfilUsuario(usuario->id);
         getchar();
-         criarMenuPrincipal(&usuario);
+        criarMenuPrincipal(&usuario);
         break;
     case '3':
         procurarFilme(usuario->nome);
@@ -140,27 +140,30 @@ char *lerLinha()
     return string;
 }
 
-char *carregarInativos()
+int *carregarInativos()
 {
     // Usuario *usuarios;
     // usuarios = (Usuario *)malloc(sizeof(Usuario) * TAM);
     // qtdUsuariosInativos = 0;
 
-    char **usuarios;
-    usuarios = (char **)malloc(sizeof(char *) * TAM);
+    int *usuarios;
+    usuarios = (int *)malloc(sizeof(int *) * TAM);
 
     FILE *file = fopen("data/inativos.csv", "r");
 
-    char linha[1024];
+    char linha[10];
 
-    while (fgets(linha, 1024, file))
+    while (fgets(linha, 10, file))
     {
         if (qtdUsuariosInativos + 1 == TAM)
         {
-            usuarios = realloc(usuarios, sizeof(char *) * TAM * 2);
+            usuarios = realloc(usuarios, sizeof(int *) * TAM * 2);
         }
-        usuarios[qtdUsuariosInativos] = malloc(sizeof(char*) * TAM);
-        strcpy(usuarios[qtdUsuariosInativos], linha);
+        sscanf(linha, "%d", &usuarios[qtdUsuariosInativos]); 
+        
+        //printf("\n%d",usuarios[qtdUsuariosInativos]); 
+        usuarios[qtdUsuariosInativos]; 
+        
 
         qtdUsuariosInativos++;
     };
@@ -188,10 +191,12 @@ Usuario *carregarUsuarios()
         }
         usuarios[qtdUsuarios].nome = malloc(sizeof(char) * TAM);
         usuarios[qtdUsuarios].senha = malloc(sizeof(char) * TAM);
-        strcpy(usuarios[qtdUsuarios].nome, strtok(linha, ","));
+        
+        sscanf(strtok(linha, ","), "%d", &usuarios[qtdUsuarios].id);
+        strcpy(usuarios[qtdUsuarios].nome, strtok(NULL, ","));
         strcpy(usuarios[qtdUsuarios].senha, strtok(NULL, ","));
 
-        // printf("1:%s, ", usuarios[countUsuario].nome);
+         //printf("1:%d,\n ", usuarios[qtdUsuarios].id);
         // printf("2:%s\n", usuarios[countUsuario].senha);
 
         qtdUsuarios++;
@@ -205,7 +210,7 @@ Usuario *carregarUsuarios()
 int realizarLogin(Usuario *usuario)
 {
     Usuario *usuarios = carregarUsuarios();
-    char **inativos = carregarInativos();
+    int *inativos = carregarInativos();
 
     char *nome;
     char *senha;
@@ -241,8 +246,7 @@ int realizarLogin(Usuario *usuario)
                 {
                
 
-                    inativos[y][strcspn(inativos[y], "\n")] = NULL;
-                    if (!strcmp(nome, inativos[y])) // verifica se o usuario está no vetor de inativos
+                    if (usuarios[i].id == inativos[y]) // verifica se o usuario está no vetor de inativos
                     {
                         system("clear");
                         printf("Usuário inativo.\n");
@@ -254,6 +258,8 @@ int realizarLogin(Usuario *usuario)
 
                 if (!inativo)
                 {
+                    
+                    usuario->id = usuarios[i].id; 
                     usuario->nome = malloc(sizeof(char) * TAM);
                     strcpy(usuario->nome, usuarios[i].nome);
 
@@ -277,7 +283,6 @@ int realizarLogin(Usuario *usuario)
         system("clear");
         printf("Usuário não cadastrado.\n");
     }
-    freeVetorChar(inativos, qtdUsuariosInativos);
     freeUsuarios(usuarios);
     free(nome);
     free(senha);
@@ -335,8 +340,8 @@ int realizarCadastro()
         }
 
         FILE *file = fopen("data/usuarios.csv", "a");
-
-        fprintf(file, "\n%s,%s", novoUsuario.nome, novoUsuario.senha);
+        novoUsuario.id = usuarios[qtdUsuarios-1].id + 1; 
+        fprintf(file, "\n%d,%s,%s",novoUsuario.id, novoUsuario.nome, novoUsuario.senha);
         qtdUsuarios++;
 
         fclose(file);
@@ -364,10 +369,10 @@ int realizarCadastro()
     return 0;
 }
 
-void excluirConta(char *nome)
+void excluirConta(int inativado)
 {
     FILE *file = fopen("data/inativos.csv", "a");
-    fprintf(file, "%s\n", nome);
+    fprintf(file, "%d\n", inativado);
     fclose(file);
 }
 
@@ -386,7 +391,7 @@ void verHistorico(Usuario usuario, int ordem)
     getchar();
 }
 
-void perfilUsuario(Usuario usuario)
+void perfilUsuario(int id)
 {
 
     system("clear");
@@ -405,15 +410,16 @@ void perfilUsuario(Usuario usuario)
     switch (c)
     {
     case 'D':
-        verHistorico(usuario, 0);
+     //   verHistorico(*usuario, 0);
         break;
 
     case 'N':
-        verHistorico(usuario, 1);
+      //  verHistorico(*usuario, 1);
         break;
     case '2':
-        excluirConta(usuario.nome);
-        system("clear");
+       
+        excluirConta(id);
+       // system("clear");
         printf("\nConta excluida com sucesso!\n");
 
         break;

@@ -16,6 +16,7 @@ int main(int argc, char *argv[])
         while (resultado == 0)
         {
             resultado = criarMenuLogin(&usuarioLogado);
+           
         }
 
         if (resultado == 1)

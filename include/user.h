@@ -43,11 +43,11 @@ int realizarLogin(Usuario *usuario);
 int realizarCadastro();
 
 
-void excluirUsuario(char * usuario);
+void excluirConta(int inativado);
 
 void verHistorico(Usuario usuario, int ordem); 
 
-void perfilUsuario(Usuario usuario); 
+void perfilUsuario(int id); 
 
 
 #endif
