@@ -72,7 +72,7 @@ int criarMenuPrincipal(Usuario *usuario, int verbosidade)
             m += 10;
         }
 
-        criarMenuPrincipal(&usuario, verbosidade);
+        return 0;
         break;
     case 2:
 
@@ -82,8 +82,7 @@ int criarMenuPrincipal(Usuario *usuario, int verbosidade)
         }
         if (parar == 1)
         {
-
-            criarMenuPrincipal(&usuario, verbosidade);
+            return 0;
         }
         else
         {
@@ -91,8 +90,9 @@ int criarMenuPrincipal(Usuario *usuario, int verbosidade)
         }
         break;
     case 3:
-        procurarFilme(usuario->nome);
-        break;
+        procurarFilme(usuario->id, verbosidade);
+        //return 0;
+
     case 4:
         return 1;
         break;
@@ -125,46 +125,8 @@ freeVetorChar(char **vetor, int qtd)
     free(vetor);
 }
 
-char *lerLinha()
-{
-    int caracter;
-    size_t tamanhoChunk = TAM;
-    size_t posicaoChunk = 0;
-
-    char *string = malloc(TAM);
-
-    if (string == NULL)
-    {
-        printf("Não ha espaço para ser alocado em memoria\n");
-        exit(EXIT_FAILURE);
-    }
-
-    while ((caracter = getchar()) != '\n' && caracter != '\r')
-    {
-        string[posicaoChunk++] = caracter;
-        if (posicaoChunk == tamanhoChunk)
-        {
-            tamanhoChunk += TAM;
-
-            string = realloc(string, tamanhoChunk);
-
-            if (string == NULL)
-            {
-                printf("Não há mais espaço para ser alocado em memória\n");
-                exit(EXIT_FAILURE);
-            }
-        }
-    }
-    string[posicaoChunk] = '\0';
-
-    return string;
-}
-
 int *carregarInativos()
 {
-    // Usuario *usuarios;
-    // usuarios = (Usuario *)malloc(sizeof(Usuario) * TAM);
-    // qtdUsuariosInativos = 0;
 
     int *usuarios;
     usuarios = (int *)malloc(sizeof(int *) * TAM);
@@ -172,12 +134,12 @@ int *carregarInativos()
     FILE *file = fopen("data/inativos.csv", "r");
 
     char linha[10];
-
+    int fator = 2;
     while (fgets(linha, 10, file))
     {
-        if (qtdUsuariosInativos + 1 == TAM)
+        if (qtdUsuariosInativos % TAM)
         {
-            usuarios = realloc(usuarios, sizeof(int *) * TAM * 2);
+            usuarios = realloc(usuarios, sizeof(int)*(TAM + 1) * fator++);
         }
         sscanf(linha, "%d", &usuarios[qtdUsuariosInativos]);
 
@@ -200,19 +162,26 @@ Usuario *carregarUsuarios()
     FILE *file = fopen("data/usuarios.csv", "r");
 
     char linha[1024];
+    int fator = 2;
 
     while (fgets(linha, 1024, file))
     {
-        if (qtdUsuarios + 1 == TAM)
+        if (qtdUsuarios % TAM)
         {
-            usuarios = realloc(usuarios, sizeof(Usuario) * TAM * 2);
+            usuarios = realloc(usuarios, sizeof(Usuario) * (TAM + 1) * fator++);
         }
-        usuarios[qtdUsuarios].nome = malloc(sizeof(char) * TAM);
-        usuarios[qtdUsuarios].senha = malloc(sizeof(char) * TAM);
+        // usuarios[qtdUsuarios].nome = malloc(sizeof(char) * TAM);
+        // usuarios[qtdUsuarios].senha = malloc(sizeof(char) * TAM);
 
         sscanf(strtok(linha, ","), "%d", &usuarios[qtdUsuarios].id);
-        strcpy(usuarios[qtdUsuarios].nome, strtok(NULL, ","));
-        strcpy(usuarios[qtdUsuarios].senha, strtok(NULL, ","));
+        // strcpy(usuarios[qtdUsuarios].nome, strtok(NULL, ","));
+        // strcpy(usuarios[qtdUsuarios].senha, strtok(NULL, ","));
+
+        // usuarios[qtdUsuarios].nome = lerLinhaArquivo(usuarios[qtdUsuarios].nome);
+        // usuarios[qtdUsuarios].senha = lerLinhaArquivo(usuarios[qtdUsuarios].senha);
+
+        usuarios[qtdUsuarios].nome = lerLinhaArquivo(strtok(NULL, ","));
+        usuarios[qtdUsuarios].senha = lerLinhaArquivo(strtok(NULL, ","));
 
         //printf("1:%d,\n ", usuarios[qtdUsuarios].id);
         // printf("2:%s\n", usuarios[countUsuario].senha);
@@ -263,32 +232,31 @@ int realizarLogin(Usuario *usuario, int verbosidade)
         if (!strcmp(nome, usuarios[i].nome)) // verifica se há um usuario com o que foi digitado
         {
             cadastrado = 1;
-        }
-        else
-        {
-            cadastrado = 0;
-        }
 
-        usuarios[i].senha[strcspn(usuarios[i].senha, "\n")] = 0; // Toma como nulo a posição da string que ocorrer um "\n"
-        if (!strcmp(senha, usuarios[i].senha) )                   // verifica se a senha do usuario confere.
-        {
-            senhaCorreta = 1;
-        }
-        else
-        {
-            senhaCorreta = 0;
-        }
-
-        for (int y = 0; y < qtdUsuariosInativos; y++)
-        {
-            if (usuarios[i].id == inativos[y]) // verifica se o usuario está no vetor de inativos
+            for (int y = 0; y < qtdUsuariosInativos; y++)
             {
-                ativo = 0;
-                break;
+                if (usuarios[i].id == inativos[y]) // verifica se o usuario está no vetor de inativos
+                {
+                    ativo = 0;
+                    break;
+                }
+                else
+                {
+                    ativo = 1;
+                }
+            }
+        }
+
+        if (ativo)
+        {
+            usuarios[i].senha[strcspn(usuarios[i].senha, "\n")] = 0; // Toma como nulo a posição da string que ocorrer um "\n"
+            if (!strcmp(senha, usuarios[i].senha))                   // verifica se a senha do usuario confere.
+            {
+                senhaCorreta = 1;
             }
             else
             {
-                ativo = 1;
+                senhaCorreta = 0;
             }
         }
 
@@ -299,8 +267,8 @@ int realizarLogin(Usuario *usuario, int verbosidade)
                 if (senhaCorreta)
                 {
                     usuario->id = usuarios[i].id;
-                    usuario->nome = malloc(sizeof(char) * TAM);
-                    strcpy(usuario->nome, usuarios[i].nome);
+                    usuario->nome = lerLinhaArquivo(usuarios[i].nome);
+                    
 
                     logado = 1;
                     break;
@@ -331,56 +299,6 @@ int realizarLogin(Usuario *usuario, int verbosidade)
         printf("Usuário não cadastrado.\n");
     }
 
-    //     if (!strcmp(nome, usuarios[i].nome)) // verifica se há um usuario com o que foi digitado
-    //     {
-    //         inativo = 0;
-    //         cadastrado = 1;
-
-    //         for (int y = 0; y < qtdUsuariosInativos; y++)
-    //         {
-
-    //             if (usuarios[i].id == inativos[y]) // verifica se o usuario está no vetor de inativos
-    //             {
-    //                 inativo = 1;
-    //                 break;
-    //             }
-    //         }
-
-    //         usuarios[i].senha[strcspn(usuarios[i].senha, "\n")] = 0; // Toma como nulo a posição da string que ocorrer um "\n"
-
-    //         if (!strcmp(senha, usuarios[i].senha)) // verifica se a senha do usuario confere.
-    //         {
-    //             if (!inativo)
-    //             {
-    //                 usuario->id = usuarios[i].id;
-    //                 usuario->nome = malloc(sizeof(char) * TAM);
-    //                 strcpy(usuario->nome, usuarios[i].nome);
-
-    //                 logado = 1;
-
-    //                 break;
-    //             }
-    //         }
-    //         else
-    //         {
-
-    //             break;
-    //         }
-    //     }
-    // }
-
-    // system("clear");
-    // printf("Senha incorreta.\n");
-
-    // system("clear");
-    // printf("Usuário inativo.\n");
-
-    // if (!cadastrado)
-    // {
-    //     if (verbosidade)
-    //         system("clear");
-    //     printf("Usuário não cadastrado.\n");
-    // }
     freeUsuarios(usuarios);
     free(inativos);
     free(nome);
@@ -505,9 +423,9 @@ void excluirConta(int idUsuario, int verbosidade)
 void verHistorico(int id, int ordem, int verbosidade)
 {
     if (ordem)
-        ordernarPorNota(id);
+        ordenarPorNota(id);
     else
-        ordernarPorData(id);
+        ordenarPorData(id);
 
     getchar();
 }

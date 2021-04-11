@@ -1,3 +1,4 @@
+
 #include "filme.h"
 #include "user.h"
 #include "util.h"
@@ -70,20 +71,22 @@ FilmeHistorico *carregarFilmesHistorico()
 
     while (fgets(linha, 1024, file))
     {
-        if (qtdFilmes % TAM_F)
+        if (strlen(linha) != 0)
         {
-            filmes = realloc(filmes, sizeof(FilmeHistorico) * (TAM_F + 1) * fator++);
+            if (qtdFilmes % TAM_F)
+            {
+                filmes = realloc(filmes, sizeof(FilmeHistorico) * (TAM_F + 1) * fator++);
+            }
+            
+             filmes[qtdFilmesHistorico].nomeFilme = malloc(sizeof(char)*100);
+            sscanf(strtok(linha, ","), "%d", &filmes[qtdFilmesHistorico].idUsuario);
+            strcpy(filmes[qtdFilmesHistorico].nomeFilme ,strtok(NULL, ","));
+            sscanf(strtok(NULL, ","), "%f", &filmes[qtdFilmesHistorico].nota);
+            strcpy(filmes[qtdFilmesHistorico].data, strtok(NULL, ""));
+            filmes[qtdFilmesHistorico].data[strcspn(filmes[qtdFilmesHistorico].data, "\n")] = 0;
+
+            qtdFilmesHistorico++;
         }
-
-        filmes[qtdFilmesHistorico].nomeFilme = malloc(sizeof(char) * 100);
-
-        sscanf(strtok(linha, ","), "%d", &filmes[qtdFilmesHistorico].idUsuario);
-        strcpy(filmes[qtdFilmesHistorico].nomeFilme, strtok(NULL, ","));
-        sscanf(strtok(NULL, ","), "%f", &filmes[qtdFilmesHistorico].nota);
-        strcpy(filmes[qtdFilmesHistorico].data, strtok(NULL, ""));
-        filmes[qtdFilmesHistorico].data[strcspn(filmes[qtdFilmesHistorico].data, "\n")] = 0;
-
-        qtdFilmesHistorico++;
     };
 
     fclose(file);
@@ -110,16 +113,18 @@ Filme *carregarFilmes()
             filmes = realloc(filmes, sizeof(Filme) * (TAM_F + 1) * fator++);
         }
 
-        filmes[qtdFilmes].nome = malloc(sizeof(char) * 100);
-        filmes[qtdFilmes].sinopse = malloc(sizeof(char) * 1000);
+        // filmes[qtdFilmes].nome = malloc(sizeof(char) * 100);
+        // filmes[qtdFilmes].sinopse = malloc(sizeof(char) * 1000);
 
-        strcpy(filmes[qtdFilmes].nome, strtok(linha, ","));
+        // strcpy(filmes[qtdFilmes].nome, strtok(linha, ","));
+        filmes[qtdFilmes].nome = lerLinhaArquivo(strtok(linha, ","));
 
         sscanf(strtok(NULL, ","), "%d", &filmes[qtdFilmes].ano);
         sscanf(strtok(NULL, ","), "%d", &filmes[qtdFilmes].duracao);
         sscanf(strtok(NULL, ","), "%f", &filmes[qtdFilmes].nota);
+        filmes[qtdFilmes].sinopse = lerLinhaArquivo(strtok(NULL, ""));
 
-        strcpy(filmes[qtdFilmes].sinopse, strtok(NULL, ""));
+        // strcpy(filmes[qtdFilmes].sinopse, strtok(NULL, ""));
 
         qtdFilmes++;
     };
@@ -129,7 +134,7 @@ Filme *carregarFilmes()
     return filmes;
 }
 
-void ordernarPorNota(int idUsuario)
+void ordenarPorNota(int idUsuario)
 {
     int max = 0;
 
@@ -138,99 +143,122 @@ void ordernarPorNota(int idUsuario)
     float auxiliarNota = 0;
     char auxiliarData[20];
 
-    FilmeHistorico *filmesHistorico = carregarFilmesHistorico();
 
-    //selection sort para ordernar as cidades por quantidade de casos confirmados
-    for (int i = 0; i < qtdFilmesHistorico - 1; i++)
+    FilmeHistorico *filmesHistorico = carregarFilmesHistorico();
+    if (qtdFilmesHistorico > 0)
     {
-        max = i;
-        for (int j = i + 1; j < qtdFilmesHistorico; j++)
+        //selection sort para ordernar os filmes pela data que foram assistidos em ordem decrescente
+        for (int i = 0; i < qtdFilmesHistorico - 1; i++)
         {
-            if (filmesHistorico[j].nota > filmesHistorico[max].nota)
+            max = i;
+            for (int j = i + 1; j < qtdFilmesHistorico; j++)
             {
-                max = j;
+                if (filmesHistorico[j].nota > filmesHistorico[max].nota)
+                {
+                    max = j;
+                }
+            }
+
+            //verificando se existe uma um filme com a data maior que o atual
+            if (max != i)
+            {
+                //se sim, troca os filmes de lugar com auxilio de variáveis temporárias
+                auxiliarIdUsuario = filmesHistorico[max].idUsuario;
+                strcpy(auxiliarNomeFilme, filmesHistorico[max].nomeFilme);
+                auxiliarNota = filmesHistorico[max].nota;
+                strcpy(auxiliarData, filmesHistorico[max].data);
+
+                filmesHistorico[max].idUsuario = filmesHistorico[i].idUsuario;
+                strcpy(filmesHistorico[max].nomeFilme, filmesHistorico[i].nomeFilme);
+                filmesHistorico[max].nota = filmesHistorico[i].nota;
+                strcpy(filmesHistorico[max].data, filmesHistorico[i].data);
+
+                filmesHistorico[i].idUsuario = auxiliarIdUsuario;
+                strcpy(filmesHistorico[i].nomeFilme, auxiliarNomeFilme);
+                filmesHistorico[i].nota = auxiliarNota;
+                strcpy(filmesHistorico[i].data, auxiliarData);
             }
         }
-
-        //verificando se existe uma cidade com número de casos maior que a atual
-        if (max != i)
-        {
-            //se sim, troca as cidades de lugar com auxilio de variáveis temporárias
-            auxiliarIdUsuario = filmesHistorico[max].idUsuario;
-            strcpy(auxiliarNomeFilme, filmesHistorico[max].nomeFilme);
-            auxiliarNota = filmesHistorico[max].nota;
-            strcpy(auxiliarData, filmesHistorico[max].data);
-
-            filmesHistorico[max].idUsuario = filmesHistorico[i].idUsuario;
-            strcpy(filmesHistorico[max].nomeFilme, filmesHistorico[i].nomeFilme);
-            filmesHistorico[max].nota = filmesHistorico[i].nota;
-            strcpy(filmesHistorico[max].data, filmesHistorico[i].data);
-
-            filmesHistorico[i].idUsuario = auxiliarIdUsuario;
-            strcpy(filmesHistorico[i].nomeFilme, auxiliarNomeFilme);
-            filmesHistorico[i].nota = auxiliarNota;
-            strcpy(filmesHistorico[i].data, auxiliarData);
-        }
     }
 
-    //exibindo o top n casos confirmados
+    //exibindo a ordenação por data dos filmes
+    int historicoUsuario = 0;
     for (int i = 0; i < qtdFilmesHistorico; i++)
     {
-        if (filmesHistorico[i].idUsuario == idUsuario)
+      //  if (filmesHistorico[i].idUsuario == idUsuario)
+        {
             printf("%s: %s, %.2f \n", filmesHistorico[i].nomeFilme, filmesHistorico[i].data, filmesHistorico[i].nota);
+            historicoUsuario = 1;
+        }
     }
+    if (!historicoUsuario)
+    {
+        printf("\nNao ha filmes assistidos pelo usuario.");
+    }
+    freeFilmesHistoricos(filmesHistorico);
 }
 
-void ordernarPorData(int idUsuario)
+void ordenarPorData(int idUsuario)
 {
     int max = 0;
 
     int auxiliarIdUsuario;
     char auxiliarNomeFilme[100];
     float auxiliarNota = 0;
-    char auxiliarData[11];
+    char auxiliarData[20];
 
     FilmeHistorico *filmesHistorico = carregarFilmesHistorico();
-
-    //selection sort para ordernar os filmes pela data que foram assistidos em ordem decrescente
-    for (int i = 0; i < qtdFilmesHistorico - 1; i++)
+    if (qtdFilmesHistorico > 0)
     {
-        max = i;
-        for (int j = i + 1; j < qtdFilmesHistorico; j++)
+        //selection sort para ordernar os filmes pela data que foram assistidos em ordem decrescente
+        for (int i = 0; i < qtdFilmesHistorico - 1; i++)
         {
-            if (stot(filmesHistorico[j].data) > stot(filmesHistorico[max].data))
+            max = i;
+            for (int j = i + 1; j < qtdFilmesHistorico; j++)
             {
-                max = j;
+                if (stot(filmesHistorico[j].data) > stot(filmesHistorico[max].data))
+                {
+                    max = j;
+                }
             }
-        }
 
-        //verificando se existe uma um filme com a data maior que o atual
-        if (max != i)
-        {
-            //se sim, troca os filmes de lugar com auxilio de variáveis temporárias
-            auxiliarIdUsuario = filmesHistorico[max].idUsuario;
-            strcpy(auxiliarNomeFilme, filmesHistorico[max].nomeFilme);
-            auxiliarNota = filmesHistorico[max].nota;
-            strcpy(auxiliarData, filmesHistorico[max].data);
+            //verificando se existe uma um filme com a data maior que o atual
+            if (max != i)
+            {
+                //se sim, troca os filmes de lugar com auxilio de variáveis temporárias
+                auxiliarIdUsuario = filmesHistorico[max].idUsuario;
+                strcpy(auxiliarNomeFilme, filmesHistorico[max].nomeFilme);
+                auxiliarNota = filmesHistorico[max].nota;
+                strcpy(auxiliarData, filmesHistorico[max].data);
 
-            filmesHistorico[max].idUsuario = filmesHistorico[i].idUsuario;
-            strcpy(filmesHistorico[max].nomeFilme, filmesHistorico[i].nomeFilme);
-            filmesHistorico[max].nota = filmesHistorico[i].nota;
-            strcpy(filmesHistorico[max].data, filmesHistorico[i].data);
+                filmesHistorico[max].idUsuario = filmesHistorico[i].idUsuario;
+                strcpy(filmesHistorico[max].nomeFilme, filmesHistorico[i].nomeFilme);
+                filmesHistorico[max].nota = filmesHistorico[i].nota;
+                strcpy(filmesHistorico[max].data, filmesHistorico[i].data);
 
-            filmesHistorico[i].idUsuario = auxiliarIdUsuario;
-            strcpy(filmesHistorico[i].nomeFilme, auxiliarNomeFilme);
-            filmesHistorico[i].nota = auxiliarNota;
-            strcpy(filmesHistorico[i].data, auxiliarData);
+                filmesHistorico[i].idUsuario = auxiliarIdUsuario;
+                strcpy(filmesHistorico[i].nomeFilme, auxiliarNomeFilme);
+                filmesHistorico[i].nota = auxiliarNota;
+                strcpy(filmesHistorico[i].data, auxiliarData);
+            }
         }
     }
 
     //exibindo a ordenação por data dos filmes
+    int historicoUsuario = 0;
     for (int i = 0; i < qtdFilmesHistorico; i++)
     {
-        if (filmesHistorico[i].idUsuario == idUsuario)
+      //  if (filmesHistorico[i].idUsuario == idUsuario)
+        {
             printf("%s: %s, %.2f \n", filmesHistorico[i].nomeFilme, filmesHistorico[i].data, filmesHistorico[i].nota);
+            historicoUsuario = 1;
+        }
     }
+    if (!historicoUsuario)
+    {
+        printf("\nNao ha filmes assistidos pelo usuario.");
+    }
+    freeFilmesHistoricos(filmesHistorico);
 }
 
 int listarFilmes(int m, int idUsuario, int verbosidade)
@@ -273,35 +301,23 @@ int listarFilmes(int m, int idUsuario, int verbosidade)
     scanf("%s", &entrada);
     getchar();
 
-    if (verbosidade)
-        printf("\nEntrada: %s\n\n", entrada);
-
     if (entrada[0] == 'M' || entrada[0] == 'm')
     {
+        freeFilmes(filmes);
         return 1;
     }
     else if (entrada[0] == '0')
     {
+        freeFilmes(filmes);
         return 0;
     }
     else
     {
-        // for (int i = m; i < 5 + m; i++)
-        // {
-        //     if (c == i + '0')
-        //     {
-
-        //         assistirFilme(filmes[i - 1], nome);
-        //         break;
-        //     }
-        // }
-        //
-        //assistirFilme(filmes[i - 1], nome);
 
         int posicao = 0;
         sscanf(entrada, "%d", &posicao);
 
-        if (posicao < m + 10 && posicao > m)
+        if (posicao <= m + 10 && posicao > m)
         {
 
             assistirFilme(filmes[posicao - 1], idUsuario, verbosidade);
@@ -310,29 +326,89 @@ int listarFilmes(int m, int idUsuario, int verbosidade)
             printf("\nFilme não está na lista. ");
     }
     freeFilmes(filmes);
+    return 0;
 }
 
-void procurarFilme(int verbosidade)
+int procurarFilme(int idUsuario, int verbosidade)
 {
-    char pesquisa[100];
     if (verbosidade)
+    {
         printf("Pesquisa de filme: ");
-    scanf("%s", pesquisa);
+    }
+
+    char *pesquisa;
+    pesquisa = lerLinha();
 
     Filme *filmes = carregarFilmes();
-   
+    int *ids;
+    int qtdFilmesPesquisa = 0;
+
     if (verbosidade)
+    {
+        printf("Digite o id do filme que deseja assistir:\n\n");
         printf("|ID do filme | Nome do filme\n");
-        
+    }
+
+    ids = (int *)malloc(sizeof(int) * 10);
+    int fator = 2;
+
     for (int i = 0; i < qtdFilmes; i++)
     {
         if (strcasestr(filmes[i].nome, pesquisa))
         {
-            printf("|%d|  - %s \n", i, filmes[i].nome);
+            printf("|%d| - %s \n", i + 1, filmes[i].nome);
+
+            ids[qtdFilmesPesquisa] = i + 1; // atribui-se o id do filme;
+            qtdFilmesPesquisa++;
+
+            if (qtdFilmesPesquisa % 10)
+            {
+                ids = (int *)realloc(ids, sizeof(int) * (10 + fator++));
+            }
         }
     }
 
+    if (qtdFilmesPesquisa == 0)
+    {
+        printf("Não foram encontrados filmes para a chave de pesquisa informada.");
+    }
+    else
+    {
+        printf("\n0 - Voltar\n\n");
+        printf("Opcao: ");
+
+        int entrada;
+        scanf("%d", &entrada);
+        getchar();
+
+        if (entrada == 0)
+        {
+            free(ids);
+            freeFilmes(filmes);
+            free(pesquisa);
+
+            return 0;
+        }
+        else
+        {
+            int estaNaLista = 0;
+
+            for (int i = 0; i < qtdFilmesPesquisa; i++)
+            {
+                if (entrada == ids[i])
+                {
+                    assistirFilme(filmes[entrada -1 ], idUsuario, verbosidade);
+                    estaNaLista = 1;
+                }
+            }
+
+            if (!estaNaLista)
+                printf("\nFilme não está na lista. ");
+        }
+    }
+    free(ids);
     freeFilmes(filmes);
+    free(pesquisa);
 }
 
 void assistirFilme(Filme filmes, int idUsuario, int verbosidade)
@@ -372,7 +448,6 @@ void assistirFilme(Filme filmes, int idUsuario, int verbosidade)
             printf("\nDigite a data que você viu o filme: ");
 
         scanf("%s", data);
-        // data[11] = '\0';
         FILE *file = fopen("data/historicos.csv", "a");
         fprintf(file, "%d,%s,%.02f,%s\n", idUsuario, filmes.nome, nota, data);
         fclose(file);

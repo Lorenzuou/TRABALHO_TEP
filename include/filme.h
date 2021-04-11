@@ -7,6 +7,8 @@
 #include<string.h>
 #include <time.h>
 
+
+
 #define TAM_F 20
 
 
@@ -38,28 +40,16 @@ typedef struct
 
 FilmeHistorico *carregarFilmesHistorico(); 
 
-void ordernarPorNota(int idUsuario); 
+void ordenarPorNota(int idUsuario); 
 
-void ordernarPorData(int idUsuario); 
+void ordenarPorData(int idUsuario); 
 
 Filme *carregarFilmes();
 
-void procurarFilme(int verbosidade);
-
-
-
-
-
+int procurarFilme(int idUsuario, int verbosidade);
 
 int listarFilmes(int m, int idUsuario, int verbosidade); 
 
-
-
 void assistirFilme(Filme filme, int idUsuario, int verbosidade);
-
-
-
-
-
 
 #endif
