@@ -32,16 +32,13 @@ int main(int argc, char *argv[])
             parar = 0;
             while (parar == 0)
             {
-                system("clear");
+                if (verbosidade)
+                    system("clear");
                 parar = criarMenuPrincipal(&usuarioLogado, verbosidade);
-                logado = 0;
             }
-        free(usuarioLogado.nome);
+            free(usuarioLogado.nome);
         }
-        
     }
-    
-    
 
     return 0;
 }

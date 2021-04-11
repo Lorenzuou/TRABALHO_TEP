@@ -91,7 +91,7 @@ int criarMenuPrincipal(Usuario *usuario, int verbosidade)
         break;
     case 3:
         procurarFilme(usuario->id, verbosidade);
-        //return 0;
+        return 0;
 
     case 4:
         return 1;
@@ -139,7 +139,7 @@ int *carregarInativos()
     {
         if (qtdUsuariosInativos % TAM)
         {
-            usuarios = realloc(usuarios, sizeof(int)*(TAM + 1) * fator++);
+            usuarios = realloc(usuarios, sizeof(int) * (TAM + 1) * fator++);
         }
         sscanf(linha, "%d", &usuarios[qtdUsuariosInativos]);
 
@@ -268,7 +268,6 @@ int realizarLogin(Usuario *usuario, int verbosidade)
                 {
                     usuario->id = usuarios[i].id;
                     usuario->nome = lerLinhaArquivo(usuarios[i].nome);
-                    
 
                     logado = 1;
                     break;
@@ -283,19 +282,22 @@ int realizarLogin(Usuario *usuario, int verbosidade)
         {
             if (!senhaCorreta)
             {
-                system("clear");
+                if (verbosidade)
+                    system("clear");
                 printf("Senha incorreta.\n");
             }
         }
         else
         {
-            system("clear");
+            if (verbosidade)
+                system("clear");
             printf("Usuário inativo.\n");
         }
     }
     else
     {
-        system("clear");
+        if (verbosidade)
+            system("clear");
         printf("Usuário não cadastrado.\n");
     }
 
@@ -348,7 +350,8 @@ int realizarCadastro(int verbosidade)
 
                 if (usuarios[i].id == inativos[y]) // verifica se o usuario está no vetor de inativos
                 {
-                    system("clear");
+                    if (verbosidade)
+                        system("clear");
                     printf("Usuário inativo.\n");
 
                     inativo = 1;
@@ -358,7 +361,8 @@ int realizarCadastro(int verbosidade)
 
             if (!inativo)
             {
-                system("clear");
+                if (verbosidade)
+                    system("clear");
                 printf("Usuário já cadastrado.\n");
                 return 0;
             }
@@ -372,7 +376,8 @@ int realizarCadastro(int verbosidade)
         {
             if (!isalnum(novoUsuario.senha[i]))
             {
-                //system("clear");
+                if (verbosidade)
+                    system("clear");
                 printf("Senha fora do padrão.\n");
 
                 return 0;
@@ -381,7 +386,7 @@ int realizarCadastro(int verbosidade)
 
         FILE *file = fopen("data/usuarios.csv", "a");
         novoUsuario.id = usuarios[qtdUsuarios - 1].id + 1;
-        fprintf(file, "\n%d,%s,%s", novoUsuario.id, novoUsuario.nome, novoUsuario.senha);
+        fprintf(file, "%d,%s,%s\n", novoUsuario.id, novoUsuario.nome, novoUsuario.senha);
         qtdUsuarios++;
 
         fclose(file);
@@ -400,7 +405,8 @@ int realizarCadastro(int verbosidade)
     }
     else
     {
-        system("clear");
+        if (verbosidade)
+            system("clear");
         printf("As senhas não conferem.\n");
     }
     free(inativos);
@@ -427,7 +433,14 @@ void verHistorico(int id, int ordem, int verbosidade)
     else
         ordenarPorData(id);
 
-    getchar();
+    if (verbosidade)
+    {
+        printf("\n\nPressione 1 para continuar. \n");
+        int entrada; 
+        
+        scanf("%d",&entrada);
+        getchar();
+    }
 }
 
 int perfilUsuario(int id, int verbosidade)
@@ -448,6 +461,7 @@ int perfilUsuario(int id, int verbosidade)
         printf("Opção: ");
     }
     char entrada;
+    
     scanf("%c", &entrada);
     getchar();
 
@@ -472,6 +486,6 @@ int perfilUsuario(int id, int verbosidade)
         printf("Opcao invalida.\n");
         return 2;
     }
+    return 2; 
 
-    return 1;
 }

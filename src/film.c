@@ -62,7 +62,7 @@ void freeFilmesHistoricos(FilmeHistorico *filmes)
 FilmeHistorico *carregarFilmesHistorico()
 {
     FilmeHistorico *filmes;
-    filmes = (FilmeHistorico *)malloc(sizeof(Filme) * TAM_F);
+    filmes = (FilmeHistorico *)malloc(sizeof(FilmeHistorico) * TAM_F);
     qtdFilmesHistorico = 0;
     FILE *file = fopen("data/historicos.csv", "r");
     int fator = 2;
@@ -73,14 +73,14 @@ FilmeHistorico *carregarFilmesHistorico()
     {
         if (strlen(linha) != 0)
         {
-            if (qtdFilmes % TAM_F)
+            if (qtdFilmesHistorico % TAM_F)
             {
                 filmes = realloc(filmes, sizeof(FilmeHistorico) * (TAM_F + 1) * fator++);
             }
-            
-             filmes[qtdFilmesHistorico].nomeFilme = malloc(sizeof(char)*100);
+
+            filmes[qtdFilmesHistorico].nomeFilme = malloc(sizeof(char) * 100);
             sscanf(strtok(linha, ","), "%d", &filmes[qtdFilmesHistorico].idUsuario);
-            strcpy(filmes[qtdFilmesHistorico].nomeFilme ,strtok(NULL, ","));
+            strcpy(filmes[qtdFilmesHistorico].nomeFilme, strtok(NULL, ","));
             sscanf(strtok(NULL, ","), "%f", &filmes[qtdFilmesHistorico].nota);
             strcpy(filmes[qtdFilmesHistorico].data, strtok(NULL, ""));
             filmes[qtdFilmesHistorico].data[strcspn(filmes[qtdFilmesHistorico].data, "\n")] = 0;
@@ -143,7 +143,6 @@ void ordenarPorNota(int idUsuario)
     float auxiliarNota = 0;
     char auxiliarData[20];
 
-
     FilmeHistorico *filmesHistorico = carregarFilmesHistorico();
     if (qtdFilmesHistorico > 0)
     {
@@ -185,7 +184,7 @@ void ordenarPorNota(int idUsuario)
     int historicoUsuario = 0;
     for (int i = 0; i < qtdFilmesHistorico; i++)
     {
-      //  if (filmesHistorico[i].idUsuario == idUsuario)
+        if (filmesHistorico[i].idUsuario == idUsuario)
         {
             printf("%s: %s, %.2f \n", filmesHistorico[i].nomeFilme, filmesHistorico[i].data, filmesHistorico[i].nota);
             historicoUsuario = 1;
@@ -248,7 +247,7 @@ void ordenarPorData(int idUsuario)
     int historicoUsuario = 0;
     for (int i = 0; i < qtdFilmesHistorico; i++)
     {
-      //  if (filmesHistorico[i].idUsuario == idUsuario)
+        if (filmesHistorico[i].idUsuario == idUsuario)
         {
             printf("%s: %s, %.2f \n", filmesHistorico[i].nomeFilme, filmesHistorico[i].data, filmesHistorico[i].nota);
             historicoUsuario = 1;
@@ -363,7 +362,7 @@ int procurarFilme(int idUsuario, int verbosidade)
 
             if (qtdFilmesPesquisa % 10)
             {
-                ids = (int *)realloc(ids, sizeof(int) * (10 + fator++));
+                ids = (int *)realloc(ids, sizeof(int) * (10 * fator++));
             }
         }
     }
@@ -374,8 +373,11 @@ int procurarFilme(int idUsuario, int verbosidade)
     }
     else
     {
-        printf("\n0 - Voltar\n\n");
-        printf("Opcao: ");
+        if (verbosidade)
+        {
+            printf("\n0 - Voltar\n\n");
+            printf("Opcao: ");
+        }
 
         int entrada;
         scanf("%d", &entrada);
@@ -397,7 +399,7 @@ int procurarFilme(int idUsuario, int verbosidade)
             {
                 if (entrada == ids[i])
                 {
-                    assistirFilme(filmes[entrada -1 ], idUsuario, verbosidade);
+                    assistirFilme(filmes[entrada - 1], idUsuario, verbosidade);
                     estaNaLista = 1;
                 }
             }
@@ -414,23 +416,21 @@ int procurarFilme(int idUsuario, int verbosidade)
 void assistirFilme(Filme filmes, int idUsuario, int verbosidade)
 {
     if (verbosidade)
-    {
         system("clear");
 
-        printf("Titulo: %s \n", filmes.nome);
-        printf("Ano: %d \n", filmes.ano);
-        printf("Duracao: %d min\n", filmes.duracao);
+    printf("Titulo: %s \n", filmes.nome);
+    printf("Ano: %d \n", filmes.ano);
+    printf("Duracao: %d min\n", filmes.duracao);
+    printf("Avaliacao: %.02f \n", filmes.nota);
+    printf("Descricao: %s \n", filmes.sinopse);
 
-        printf("Avaliacao: %.02f \n", filmes.nota);
-
-        printf("Descricao: %s \n", filmes.sinopse);
+    if (verbosidade)
+    {
 
         printf("1 - Assistir \n");
         printf("2 - Voltar \n\n");
-
         printf("Opção: ");
     }
-
     char entrada;
     scanf("%s", &entrada);
     getchar();
