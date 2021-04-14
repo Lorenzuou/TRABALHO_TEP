@@ -107,6 +107,17 @@ int criarMenuPrincipal(Usuario *usuario, int verbosidade)
     return 1;
 }
 
+void freeUsuarios(Usuario *usuarios)
+{
+    for (int i = 0; i < qtdUsuarios; i++)
+    {
+        free(usuarios[i].nome);
+        free(usuarios[i].senha);
+    }
+    free(usuarios);
+}
+
+
 Usuario *carregarUsuarios()
 {
     Usuario *usuarios;

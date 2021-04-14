@@ -183,8 +183,17 @@ void ordenarPorNota(int idUsuario)
     {
         if (filmesHistorico[i].idUsuario == idUsuario)
         {
-            printf("%s: %s, %.2f \n", filmesHistorico[i].nomeFilme, filmesHistorico[i].data, filmesHistorico[i].nota);
-            historicoUsuario = 1;
+            if (filmesHistorico[i].nota < 0)
+            {
+                printf("%s: %s, %s \n", filmesHistorico[i].nomeFilme, filmesHistorico[i].data, "Sem avaliacao");
+                historicoUsuario = 1;
+            }
+            else
+            {
+
+                printf("%s: %s, %.2f \n", filmesHistorico[i].nomeFilme, filmesHistorico[i].data, filmesHistorico[i].nota);
+                historicoUsuario = 1;
+            }
         }
     }
     if (!historicoUsuario)
@@ -246,8 +255,17 @@ void ordenarPorData(int idUsuario)
     {
         if (filmesHistorico[i].idUsuario == idUsuario)
         {
-            printf("%s: %s, %.2f \n", filmesHistorico[i].nomeFilme, filmesHistorico[i].data, filmesHistorico[i].nota);
-            historicoUsuario = 1;
+            if (filmesHistorico[i].nota < 0)
+            {
+                printf("%s: %s, %s \n", filmesHistorico[i].nomeFilme, filmesHistorico[i].data, "Sem avaliacao");
+                historicoUsuario = 1;
+            }
+            else
+            {
+
+                printf("%s: %s, %.2f \n", filmesHistorico[i].nomeFilme, filmesHistorico[i].data, filmesHistorico[i].nota);
+                historicoUsuario = 1;
+            }
         }
     }
     if (!historicoUsuario)
@@ -446,7 +464,10 @@ void assistirFilme(Filme filmes, int idUsuario, int verbosidade)
         scanf("%s", data);
 
         int EhData = 1;
-        char numeroData[2];
+        char diaData[3];
+        diaData[2] = '\0';
+        char mesData[3];
+        mesData[2] = '\0';
 
         int i = 0;
         for (i; i < 2; i++)
@@ -454,38 +475,39 @@ void assistirFilme(Filme filmes, int idUsuario, int verbosidade)
 
             if (!isdigit(data[i]))
                 EhData = 0;
-            numeroData[i % 2] = data[i];
+            diaData[i] = data[i];
         }
-        if (atoi(numeroData) % 100 > 31 || atoi(numeroData) % 100 < 1)
+        if (atoi(diaData) > 31 || atoi(diaData) < 1)
         {
             EhData = 0;
         }
-
         if (data[i++] != '/')
             EhData = 0;
         for (i; i < 5; i++)
         {
             if (!isdigit(data[i]))
                 EhData = 0;
-            numeroData[i % 5] = data[i];
+            mesData[(i - 3)] = data[i];
         }
-        if (atoi(numeroData) % 100 > 12 || atoi(numeroData) % 100 < 1)
+
+        if (atoi(mesData) > 12 || atoi(mesData) < 1)
         {
             EhData = 0;
         }
 
         if (data[i++] != '/')
             EhData = 0;
-        char ano[4];
-        
+        char ano[5];
+        ano[4] = '\0';
+
         for (i; i < 10; i++)
         {
-            ano[i-6] = data[i]; 
+            ano[i - 6] = data[i];
             if (!isdigit(data[i]))
                 EhData = 0;
         }
 
-          if (atoi(ano)/100 > 2021 || atoi(numeroData) / 100 < 1900)
+        if (atoi(ano) > 2021 || atoi(ano) < 1900)
         {
             EhData = 0;
         }

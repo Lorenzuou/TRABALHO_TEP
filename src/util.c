@@ -16,24 +16,15 @@ time_t stot(char *date)
   return time;
 }
 
-void freeUsuarios(Usuario *usuarios)
-{
-    for (int i = 0; i < qtdUsuarios; i++)
-    {
-        free(usuarios[i].nome);
-        free(usuarios[i].senha);
-    }
-    free(usuarios);
-}
 
-freeVetorChar(char **vetor, int qtd)
-{
-    for (int i = 0; i < qtd; i++)
-    {
-        free(vetor[i]);
-    }
-    free(vetor);
-}
+// freeVetorChar(char **vetor, int qtd)
+// {
+//     for (int i = 0; i < qtd; i++)
+//     {
+//         free(vetor[i]);
+//     }
+//     free(vetor);
+// }
 
 char *lerLinha()
 {

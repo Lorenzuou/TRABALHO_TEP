@@ -34,11 +34,13 @@ int main(int argc, char *argv[])
             {
                 if (verbosidade)
                     system("clear");
-                parar = criarMenuPrincipal(&usuarioLogado, verbosidade); // executa o menu enquanto parar != 2
+                parar = criarMenuPrincipal(&usuarioLogado, verbosidade); // executa o menu enquanto parar == 0
             }
-            free(usuarioLogado.nome);
+             free(usuarioLogado.nome);
+            // free(usuarioLogado.senha);
         }
-    }
+    }   
+    
 
-    return 0;
+    return 0;   
 }
