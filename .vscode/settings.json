@@ -16,6 +16,7 @@
         "streambuf": "c",
         "functional": "c",
         "tuple": "c",
-        "random": "c"
+        "random": "c",
+        "util.h": "c"
     }
 }

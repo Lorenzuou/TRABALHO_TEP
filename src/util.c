@@ -2,18 +2,6 @@
 #include "string.h"
 
 
-char *allocString(char *vetor)
-{
-  int tamanho = strlen(vetor);
-
-  char *aux = (char *)malloc(sizeof(char) * tamanho);
-
-  strcpy(aux, vetor);
-
-  //free(vetor);
-
-  return aux;
-}
 
 // converte uma string no formato dd/mm/yyyy no tipo time_t
 time_t stot(char *date)
@@ -27,16 +15,25 @@ time_t stot(char *date)
   time_t time = mktime(&tm);
   return time;
 }
-// converte o tipo time_t em uma string no formato dd/mm/yyyy. A string
-// `date` é a string que vai conter a data no formato especificado e deve
-// ter sua memória alocada anteriormente (estatica ou dinamicamente) e
-// deve ter ao menos 11 caracteres de tamanho
-void ttos(time_t time, char *date)
+
+void freeUsuarios(Usuario *usuarios)
 {
-  struct tm tm = *gmtime(&time);
-  sprintf(date, "%02d/%02d/%4d", tm.tm_mday, tm.tm_mon + 1, tm.tm_year + 1900);
+    for (int i = 0; i < qtdUsuarios; i++)
+    {
+        free(usuarios[i].nome);
+        free(usuarios[i].senha);
+    }
+    free(usuarios);
 }
 
+freeVetorChar(char **vetor, int qtd)
+{
+    for (int i = 0; i < qtd; i++)
+    {
+        free(vetor[i]);
+    }
+    free(vetor);
+}
 
 char *lerLinha()
 {
@@ -88,14 +85,14 @@ char *lerLinhaArquivo(char * texto)
     }
 
     int i = 0; 
-    while ((caracter = texto[i]) != '\n' && caracter != '\r')
+    while ((caracter = texto[i]) != '\n' && caracter != '\r') //enqunato não encontrar uma quebra de linha, continua a ler os caracteres
     {
         string[posicaoChunk++] = caracter;
-        if (posicaoChunk == tamanhoChunk)
+        if (posicaoChunk == tamanhoChunk) // Se o tamanho da string é maior que o chunk, aumenta-se o tamanho alocado da string com realloc
         {
             tamanhoChunk += TAM_UTIL;
 
-            string = realloc(string,sizeof(char)* tamanhoChunk);
+            string = realloc(string,sizeof(char)* tamanhoChunk); 
 
             if (string == NULL)
             {

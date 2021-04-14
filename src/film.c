@@ -1,5 +1,4 @@
 
-#include "filme.h"
 #include "user.h"
 #include "util.h"
 
@@ -77,7 +76,7 @@ FilmeHistorico *carregarFilmesHistorico()
             {
                 filmes = realloc(filmes, sizeof(FilmeHistorico) * (TAM_F + 1) * fator++);
             }
-
+            // lê filme por filme na lista de filmes do historico separando os elementos por ","
             filmes[qtdFilmesHistorico].nomeFilme = malloc(sizeof(char) * 100);
             sscanf(strtok(linha, ","), "%d", &filmes[qtdFilmesHistorico].idUsuario);
             strcpy(filmes[qtdFilmesHistorico].nomeFilme, strtok(NULL, ","));
@@ -113,10 +112,8 @@ Filme *carregarFilmes()
             filmes = realloc(filmes, sizeof(Filme) * (TAM_F + 1) * fator++);
         }
 
-        // filmes[qtdFilmes].nome = malloc(sizeof(char) * 100);
-        // filmes[qtdFilmes].sinopse = malloc(sizeof(char) * 1000);
+        // lê filme por filme na lista de filmes separando os elementos por ","
 
-        // strcpy(filmes[qtdFilmes].nome, strtok(linha, ","));
         filmes[qtdFilmes].nome = lerLinhaArquivo(strtok(linha, ","));
 
         sscanf(strtok(NULL, ","), "%d", &filmes[qtdFilmes].ano);
@@ -264,7 +261,6 @@ int listarFilmes(int m, int idUsuario, int verbosidade)
 {
     Filme *filmes = carregarFilmes();
 
-    //system("clear");
     if (verbosidade)
     {
         if (m >= qtdFilmes)
@@ -300,12 +296,12 @@ int listarFilmes(int m, int idUsuario, int verbosidade)
     scanf("%s", &entrada);
     getchar();
 
-    if (entrada[0] == 'M' || entrada[0] == 'm')
+    if (entrada[0] == 'M' || entrada[0] == 'm') // se o usuário quer avançar na lista de filmes
     {
         freeFilmes(filmes);
         return 1;
     }
-    else if (entrada[0] == '0')
+    else if (entrada[0] == '0') // se o usuário quer voltar
     {
         freeFilmes(filmes);
         return 0;
@@ -442,14 +438,68 @@ void assistirFilme(Filme filmes, int idUsuario, int verbosidade)
             printf("\nDigite a sua nota para o filme: ");
         scanf("%f", &nota);
 
-        char data[11];
+        char data[10];
         char c;
         if (verbosidade)
             printf("\nDigite a data que você viu o filme: ");
 
         scanf("%s", data);
-        FILE *file = fopen("data/historicos.csv", "a");
-        fprintf(file, "%d,%s,%.02f,%s\n", idUsuario, filmes.nome, nota, data);
-        fclose(file);
+
+        int EhData = 1;
+        char numeroData[2];
+
+        int i = 0;
+        for (i; i < 2; i++)
+        {
+
+            if (!isdigit(data[i]))
+                EhData = 0;
+            numeroData[i % 2] = data[i];
+        }
+        if (atoi(numeroData) % 100 > 31 || atoi(numeroData) % 100 < 1)
+        {
+            EhData = 0;
+        }
+
+        if (data[i++] != '/')
+            EhData = 0;
+        for (i; i < 5; i++)
+        {
+            if (!isdigit(data[i]))
+                EhData = 0;
+            numeroData[i % 5] = data[i];
+        }
+        if (atoi(numeroData) % 100 > 12 || atoi(numeroData) % 100 < 1)
+        {
+            EhData = 0;
+        }
+
+        if (data[i++] != '/')
+            EhData = 0;
+        char ano[4];
+        
+        for (i; i < 10; i++)
+        {
+            ano[i-6] = data[i]; 
+            if (!isdigit(data[i]))
+                EhData = 0;
+        }
+
+          if (atoi(ano)/100 > 2021 || atoi(numeroData) / 100 < 1900)
+        {
+            EhData = 0;
+        }
+
+        if (!EhData)
+        {
+            printf("\nData inválida");
+        }
+        else
+        {
+
+            FILE *file = fopen("data/historicos.csv", "a");
+            fprintf(file, "%d,%s,%.02f,%s\n", idUsuario, filmes.nome, nota, data);
+            fclose(file);
+        }
     }
 }
