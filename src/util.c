@@ -1,9 +1,6 @@
 #include "user.h"
 #include "string.h"
 
-
-
-// converte uma string no formato dd/mm/yyyy no tipo time_t
 time_t stot(char *date)
 {
   struct tm tm = {0};
@@ -15,16 +12,6 @@ time_t stot(char *date)
   time_t time = mktime(&tm);
   return time;
 }
-
-
-// freeVetorChar(char **vetor, int qtd)
-// {
-//     for (int i = 0; i < qtd; i++)
-//     {
-//         free(vetor[i]);
-//     }
-//     free(vetor);
-// }
 
 char *lerLinha()
 {
@@ -76,7 +63,7 @@ char *lerLinhaArquivo(char * texto)
     }
 
     int i = 0; 
-    while ((caracter = texto[i]) != '\n' && caracter != '\r') //enqunato não encontrar uma quebra de linha, continua a ler os caracteres
+    while ((caracter = texto[i]) != '\n' && caracter != '\r') //enquanto não encontrar uma quebra de linha, continua a ler os caracteres
     {
         string[posicaoChunk++] = caracter;
         if (posicaoChunk == tamanhoChunk) // Se o tamanho da string é maior que o chunk, aumenta-se o tamanho alocado da string com realloc
@@ -97,4 +84,3 @@ char *lerLinhaArquivo(char * texto)
 
     return string;
 }
-

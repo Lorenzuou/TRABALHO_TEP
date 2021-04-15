@@ -107,17 +107,6 @@ int criarMenuPrincipal(Usuario *usuario, int verbosidade)
     return 1;
 }
 
-void freeUsuarios(Usuario *usuarios)
-{
-    for (int i = 0; i < qtdUsuarios; i++)
-    {
-        free(usuarios[i].nome);
-        free(usuarios[i].senha);
-    }
-    free(usuarios);
-}
-
-
 Usuario *carregarUsuarios()
 {
     Usuario *usuarios;
@@ -137,7 +126,6 @@ Usuario *carregarUsuarios()
         }
 
         sscanf(strtok(linha, ","), "%d", &usuarios[qtdUsuarios].id);
-
         usuarios[qtdUsuarios].nome = lerLinhaArquivo(strtok(NULL, ","));
         usuarios[qtdUsuarios].senha = lerLinhaArquivo(strtok(NULL, ","));
 
@@ -151,7 +139,6 @@ Usuario *carregarUsuarios()
 
 int *carregarInativos()
 {
-
     int *usuarios;
     usuarios = (int *)malloc(sizeof(int *) * TAM);
 
@@ -159,6 +146,8 @@ int *carregarInativos()
 
     char linha[10];
     int fator = 2;
+
+    //carrega a lista de inativos a partir do arquivo contendo o id dos usuarios inativos
     while (fgets(linha, 10, file))
     {
         if (qtdUsuariosInativos % TAM)
@@ -167,7 +156,7 @@ int *carregarInativos()
         }
 
         sscanf(linha, "%d", &usuarios[qtdUsuariosInativos]);
-        usuarios[qtdUsuariosInativos];
+
         qtdUsuariosInativos++;
     };
 
@@ -460,4 +449,17 @@ int perfilUsuario(int id, int verbosidade)
         return 2;
     }
     return 2; 
+}
+
+void freeUsuarios(Usuario *usuarios)
+{
+    //percorre o vetor de usuarios, liberando o nome e a senha
+    for (int i = 0; i < qtdUsuarios; i++)
+    {
+        free(usuarios[i].nome);
+        free(usuarios[i].senha);
+    }
+
+    //libera o vetor de usuarios
+    free(usuarios);
 }

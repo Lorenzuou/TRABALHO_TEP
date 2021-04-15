@@ -1,11 +1,12 @@
 #ifndef USER_H
 #define USER_H
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h> 
-#include "util.h"
 
+#include "util.h"
 
 #define TAM 100
 
@@ -14,7 +15,6 @@ static int qtdUsuariosInativos = 0;
 
 /**
 *@brief Struct de usuários que estão armazenados em "usuarios.csv"
-
 */
 typedef struct
 {
@@ -30,7 +30,6 @@ typedef struct
 * @return 2 para sair da aplicacao | 1 se o usuário logou | 0 se não logou
 */
 int criarMenuLogin(Usuario *usuario, int verbosidade); 
-
 
 /**
 * @brief Cria o menu principal, onde o usuário pode escolher o que quer fazer no progrma
@@ -92,9 +91,8 @@ void verHistorico(int id, int ordem, int verbosidade);
 */
 int perfilUsuario(int id, int verbosidade); 
 
-
 /**
-*@brief Libera a memória alocada pela função "carregarUsuarios()"
+* @brief Libera a memória alocada pela função "carregarUsuarios()"
 * @param usuarios lista de usuairos a serem liberados
 */
 void freeUsuarios(Usuario *usuario); 
