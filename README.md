@@ -314,3 +314,19 @@ As funcionalidades aqui não são completamente suportadas pelo sistema, mas sã
 
 Pode existir um usuário admin que tem o poder de manipular o sistema com mais liberdade. O seu único diferencial é seu nome, que é `admin`. Ele poderá adicionar e excluir filmes do catálogo. Os filmes não precisam ser excluídos, mas apenas marcados como inativos.
 
+### CORREÇÕES 
+
+1 - Data negativa
+
+O primeiro erro que corrigimos dos erros levantaos pelos monitores foi a questão de que, no momento que o usuario digita a data na qual ele assistiu o filme, se ele a digita com números negativos (como -12/04/2001) o programa todo crasha. 
+
+O erro acontecia porque nós não prevemos esse tipo de entrada em específico e, como o caracter "-" ocupa espaço, o vetor de data como um todo possuia 10 posições, assim se o usuario digitasse um numero negativo, ocorria buffer overflow com mais caracteres sendo atribuidos a um vetor insuficiente. 
+
+Dito isso, corrigimos o erro primeiro lendo a data como uma string dinamica (através da função lerLinha()), logo, mesmo que o usuario digitasse dia mes e ano negativos, o programa não iria dar crash já que o espaço alocado se adaptaria.  Posteriormente, fizemos a verificação da string para ver se essa possui um caracter diferente de numero entre as /. E, assim, corrigimos o problema. 
+
+
+2 - TAD 
+
+Após a entrevista, percebemos que, de fato, nossas bibliotecas não seguiam as melhores práticas uma vez que suas structs estavam sendo declaradas nos arquivos .h o que possibilitava o acesso dessas por outros trechos do código. 
+
+Assim, colocamos nos arquivos .c a forma dos atributos das strucs e, nos arquivos .h, colocamos a declaração que define a struct como um tipo de variável (Exermplo: typedef struct usuario Usuario; ) 
