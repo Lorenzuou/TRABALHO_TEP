@@ -80,6 +80,7 @@ char *lerLinhaArquivo(char * texto)
         }
         i++; 
     }
+
     string[posicaoChunk] = '\0';
 
     return string;

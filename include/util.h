@@ -12,12 +12,6 @@
 
 #define TAM_UTIL 1 
 
-typedef struct
-{
-    int dia;
-    int mes;
-    int ano;
-} Data;
 
 /**
 * @brief Converte um array no formato dd/mm/yyyy em uma struct de time_t

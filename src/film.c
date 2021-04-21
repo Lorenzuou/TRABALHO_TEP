@@ -4,6 +4,31 @@
 
 #define _GNU_SOURCE
 
+struct filme
+{
+    int id;
+    char *nome;
+    int duracao;
+    int ano;
+    float nota;
+    char *sinopse;
+};
+
+struct filmeHistorico
+{
+    int idUsuario;
+    char *nomeFilme;
+    char data[20];
+    float nota;
+};
+
+struct data
+{
+    int dia;
+    int mes;
+    int ano;
+};
+
 Data obterData(char *campo)
 {
     Data data;
@@ -320,6 +345,80 @@ int listarFilmes(int m, int idUsuario, int verbosidade)
     return 0;
 }
 
+int listarFilmesADM(int m, int idUsuario, int verbosidade)
+{
+    Filme *filmes = carregarFilmes();
+
+    if (verbosidade)
+    {
+        if (m >= qtdFilmes)
+        {
+            printf("Fim de filmes disponiveis\n");
+        }
+
+        printf("---------------------------\n");
+        printf("LISTA DE FILMES (ADM) | QTD.: %d\n", qtdFilmes);
+        printf("---------------------------\n\n");
+
+        printf("Digite o id do filme que deseja deletar:\n\n");
+    }
+
+    int i = 0;
+    for (i = m; i < 10 + m; i++)
+    {
+        if (i >= qtdFilmes)
+        {
+            break;
+        }
+        printf("%d- %s\n", i + 1, filmes[i].nome);
+    }
+
+    if (verbosidade)
+    {
+        printf("\nM - Mais filmes\n");
+        printf("\nA - Adicionar Filme\n");
+        printf("0 - Voltar\n\n");
+        printf("Opcao: ");
+    }
+
+    char entrada[3];
+    scanf("%s", &entrada);
+    getchar();
+
+    if (entrada[0] == 'M' || entrada[0] == 'm') // se o ADM quer avançar na lista de filmes
+    {
+        freeFilmes(filmes);
+        return 1;
+    }
+    else if (entrada[0] == 'A' || entrada[0] == 'a') // se o ADM quer adicionar um novo filme
+    {
+        adicionarFilme(verbosidade);
+        freeFilmes(filmes);
+        return 1;
+    }
+    else if (entrada[0] == '0') // se o ADM quer voltar
+    {
+        freeFilmes(filmes);
+        return 0;
+    }
+    else
+    {
+
+        int posicao = 0;
+        sscanf(entrada, "%d", &posicao);
+
+        if (posicao <= m + 10 && posicao > m)
+        {
+
+            deletarFilme(filmes[posicao - 1], idUsuario, verbosidade);
+        }
+        else
+            printf("\nFilme não está na lista. ");
+    }
+
+    freeFilmes(filmes);
+    return 0;
+}
 int procurarFilme(int idUsuario, int verbosidade)
 {
     if (verbosidade)
@@ -406,6 +505,82 @@ int procurarFilme(int idUsuario, int verbosidade)
     free(pesquisa);
 }
 
+void adicionarFilme(int verbosidade)
+{
+    FILE *file = fopen("data/filmes-grande.csv", "a");
+
+    if (verbosidade)
+    {
+        system("clear");
+        printf("Digite o nome do filme: ");
+    }
+    char *nomeFilme = lerLinha();
+    if (verbosidade)
+        printf("\nDigite o ano de lançamento: ");
+    int ano;
+    scanf("%d", &ano);
+    if (verbosidade)
+        printf("\nDigite o tempo de duração em minutos:  ");
+    int duracao;
+    scanf("%d", &duracao);
+    if (verbosidade)
+        printf("\nDigite a avaliação do filme:  ");
+    float nota;
+    scanf("%f", &nota);
+    getchar();
+    if (verbosidade)
+        printf("\nDigite a sinopse do filme: ");
+    char *sinopse = lerLinha();
+
+    fprintf(file, "%s,%d,%d,%.2f,%s\n", nomeFilme, ano, duracao, nota, sinopse);
+    fclose(file);
+    free(nomeFilme);
+    free(sinopse);
+
+    printf("\nFilme adicionado com sucesso!");
+    printf("\nPressione 0 para continuar: ");
+    getchar();
+}
+
+void deletarFilme(Filme filme, int idUsuario, int verbosidade)
+{
+    Filme *filmes = carregarFilmes();
+
+    FILE *file = fopen("data/filmes-grande.csv", "w");
+
+    fclose(file);
+
+    FILE *file2 = fopen("data/filmes-grande.csv", "a");
+
+    for (int i = 0; i < qtdFilmes; i++)
+    {
+        if (strcmp(filme.nome, filmes[i].nome))
+        {
+            fprintf(file, "%s,%d,%d,%.2f,%s\n", filmes[i].nome, filmes[i].ano, filmes[i].duracao, filmes[i].nota, filmes[i].sinopse);
+        }
+    }
+    fclose(file2);
+    freeFilmes(filmes);
+    FilmeHistorico *filmesH = carregarFilmesHistorico();
+
+    FILE *fileH = fopen("data/historicos.csv", "w");
+    fclose(fileH);
+
+    FILE *fileH2 = fopen("data/historicos.csv", "a");
+    for (int i = 0; i < qtdFilmesHistorico; i++)
+    {
+        if (strcmp(filme.nome, filmesH[i].nomeFilme))
+        {
+            fprintf(fileH2, "%d,%s,%.2f,%s\n", filmesH[i].idUsuario, filmesH[i].nomeFilme, filmesH[i].nota, filmesH[i].data);
+        }
+    }
+
+    fclose(fileH2);
+    freeFilmesHistoricos(filmesH);
+
+    printf("\nFilme deletado com sucesso\n");
+}
+
 void assistirFilme(Filme filmes, int idUsuario, int verbosidade)
 {
     if (verbosidade)
@@ -435,7 +610,7 @@ void assistirFilme(Filme filmes, int idUsuario, int verbosidade)
             printf("\nDigite a sua nota para o filme: ");
         scanf("%f", &nota);
 
-        char data[10];
+        char *data = lerLinha();
         char c;
         if (verbosidade)
             printf("\nDigite a data que você viu o filme: ");
@@ -448,6 +623,8 @@ void assistirFilme(Filme filmes, int idUsuario, int verbosidade)
         diaData[2] = '\0';
         char mesData[3];
         mesData[2] = '\0';
+        char ano[5];
+        ano[4] = '\0';
 
         int i = 0;
         for (i; i < 2; i++)
@@ -459,57 +636,67 @@ void assistirFilme(Filme filmes, int idUsuario, int verbosidade)
             diaData[i] = data[i];
         }
 
-        if (atoi(diaData) > 31 || atoi(diaData) < 1)
+        if (EhData)
         {
-            EhData = 0;
-        }
+            if (atoi(diaData) > 31 || atoi(diaData) < 1)
+            {
+                EhData = 0;
+            }
 
-        if (data[i++] != '/')
-            EhData = 0;
-
-        for (i; i < 5; i++)
-        {
-            if (!isdigit(data[i]))
+            if (data[i++] != '/')
                 EhData = 0;
 
-            mesData[(i - 3)] = data[i];
+            for (i; i < 5; i++)
+            {
+                if (!isdigit(data[i]))
+                    EhData = 0;
+
+                mesData[(i - 3)] = data[i];
+            }
+
+            if (EhData)
+            {
+                if (atoi(mesData) > 12 || atoi(mesData) < 1)
+                {
+                    EhData = 0;
+                }
+
+                if (data[i++] != '/')
+                    EhData = 0;
+
+                for (i; i < 10; i++)
+                {
+                    ano[i - 6] = data[i];
+
+                    if (!isdigit(data[i]))
+                        EhData = 0;
+                }
+
+                if (EhData)
+                {
+                    if (atoi(ano) > 2021 || atoi(ano) < 1900)
+                    {
+                        EhData = 0;
+                    }
+                    printf("primeiro %d\n", EhData);
+                }
+            }
         }
-
-        if (atoi(mesData) > 12 || atoi(mesData) < 1)
-        {
-            EhData = 0;
-        }
-
-        if (data[i++] != '/')
-            EhData = 0;
-
-        char ano[5];
-        ano[4] = '\0';
-
-        for (i; i < 10; i++)
-        {
-            ano[i - 6] = data[i];
-
-            if (!isdigit(data[i]))
-                EhData = 0;
-        }
-
-        if (atoi(ano) > 2021 || atoi(ano) < 1900)
-        {
-            EhData = 0;
-        }
-
         //se a data inserida é valida, salva os dados inseridos no arquivo do historico
         if (!EhData)
         {
+            printf("esse 1 %d\n", EhData);
             printf("\nData inválida");
+            free(data);
         }
         else
         {
+            printf("esse 2 %d\n", EhData);
 
             FILE *file = fopen("data/historicos.csv", "a");
             fprintf(file, "%d,%s,%.02f,%s\n", idUsuario, filmes.nome, nota, data);
             fclose(file);
+            free(data);
         }
     }
 }

@@ -16,12 +16,8 @@ static int qtdUsuariosInativos = 0;
 /**
 *@brief Struct de usuários que estão armazenados em "usuarios.csv"
 */
-typedef struct
-{
-    int id;
-    char *nome;
-    char *senha;
-} Usuario;
+typedef struct usuario Usuario; 
+
 
 /**
 * @brief Cria o menu de login, onde o usuario digita nome e senha para acessar o menu principal
@@ -91,10 +87,12 @@ void verHistorico(int id, int ordem, int verbosidade);
 */
 int perfilUsuario(int id, int verbosidade); 
 
+
 /**
 * @brief Libera a memória alocada pela função "carregarUsuarios()"
 * @param usuarios lista de usuairos a serem liberados
 */
 void freeUsuarios(Usuario *usuario); 
+
 
 #endif

@@ -1,6 +1,13 @@
 #include "user.h"
 #include "util.h"
 
+struct usuario
+{
+    int id;
+    char *nome;
+    char *senha;
+};
+
 int criarMenuLogin(Usuario *usuario, int verbosidade)
 {
     int resultado = 0;
@@ -61,14 +68,17 @@ int criarMenuPrincipal(Usuario *usuario, int verbosidade)
     int m = 0;
     int listar = 1;
     int parar = 2;
-    
+
     switch (entrada)
     {
 
     case 1:
         while (listar)
         {
-            listar = listarFilmes(m, usuario->id, verbosidade);
+            if (usuario->id != 0) //verificar se o usuário é o ADM
+                listar = listarFilmes(m, usuario->id, verbosidade);
+            else
+                listar = listarFilmesADM(m, usuario->id, verbosidade);
             m += 10;
         }
 
@@ -126,6 +136,7 @@ Usuario *carregarUsuarios()
         }
 
         sscanf(strtok(linha, ","), "%d", &usuarios[qtdUsuarios].id);
+    
         usuarios[qtdUsuarios].nome = lerLinhaArquivo(strtok(NULL, ","));
         usuarios[qtdUsuarios].senha = lerLinhaArquivo(strtok(NULL, ","));
 
@@ -295,7 +306,7 @@ int realizarCadastro(int verbosidade)
         printf("Digite seu nome de usuario: ");
     }
     novoUsuario.nome = lerLinha();
-    
+
     if (verbosidade)
         printf("\nDigite sua senha: ");
     novoUsuario.senha = lerLinha();
@@ -402,9 +413,9 @@ void verHistorico(int id, int ordem, int verbosidade)
     if (verbosidade)
     {
         printf("\n\nPressione 1 para continuar. \n");
-        int entrada; 
-        
-        scanf("%d",&entrada);
+        int entrada;
+
+        scanf("%d", &entrada);
         getchar();
     }
 }
@@ -423,7 +434,7 @@ int perfilUsuario(int id, int verbosidade)
         printf("Opção: ");
     }
     char entrada;
-    
+
     scanf("%c", &entrada);
     getchar();
 
@@ -448,7 +459,7 @@ int perfilUsuario(int id, int verbosidade)
         printf("Opcao invalida.\n");
         return 2;
     }
-    return 2; 
+    return 2;
 }
 
 void freeUsuarios(Usuario *usuarios)

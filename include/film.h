@@ -14,35 +14,38 @@
 static int qtdFilmes = 0; 
 static int qtdFilmesHistorico = 0;
 
+
+
+typedef struct filme Filme; 
 /**
 *@brief Struct de filmes que estão armazenados em "filmes.csv". Com todos os dados referentes aos filmes. 
 */
-typedef struct
-{
-    int id;
-    char *nome;
-    int duracao;
-    int ano;
-    float nota; 
-    char* sinopse;
-} Filme;
+
+
+typedef struct filmeHistorico FilmeHistorico; 
 
 /**
 *@brief Struct de filmes que estão armazenados em "historico.csv". 
 */
-typedef struct
-{
-    int idUsuario; 
-    char *nomeFilme;
-    char data[20];
-    float nota;   
-} FilmeHistorico;
+
+
+
+
+
+typedef struct data Data; 
+
+
+
+
+
 
 /**
 * @brief Função para obter a data a partir de uma string
 * @param campo string contendo a data
 * @return struct de data
 */
+
+
 Data obterData(char *campo);
 
 /**
@@ -108,5 +111,29 @@ void freeFilmes(Filme *filmes);
 * @param filmes lista de filmes a serem liberados
 */
 void freeFilmesHistoricos(FilmeHistorico *filmes); 
+
+/**
+* @brief Deleta um filme da lista de filmes
+* @param filme filme a ser deletado
+* @param idUsuario filme a ser deletado
+* @param verbosidade 1 se os menus aparecerão | 0 se não
+*/
+void deletarFilme(Filme filme, int idUsuario, int verbosidade); 
+
+/**
+* @brief Lista 10 filmes por vez e mostrando ao admin. O admin pode voltar ou esolher um desses filmes para deletar. pode digitar A para chamar a função de adicionar filme. 
+* @param m quantidade de filmes já mostrados. 
+* @param idUsuario id do usuário logado 
+* @param verbosidade 1 se os menus aparecerão | 0 se não
+* @return 1 se a funcao vai ser reutilizada | 0 se a funcao terminou de ser utilizada
+*/
+int listarFilmesADM(int m, int idUsuario, int verbosidade); 
+/**
+* @brief Adiciona um novo filme ao arquivo que armazena os filmes
+* @param verbosidade 1 se os menus aparecerão | 0 se não
+*/
+void adicionarFilme(int verbosidade); 
+
+
 
 #endif
